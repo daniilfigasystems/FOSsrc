@@ -1,0 +1,3 @@
+11:15:48 **** Incremental Build of configuration Default for project FigaOS ****
+make -o *.bin all 
+make: Nothing to be done for 'all'.
