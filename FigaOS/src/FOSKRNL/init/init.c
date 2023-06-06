@@ -4,7 +4,8 @@ void print_char();
 int main(void) {
     vga_init();
     vga_clear();
- print_char("hello");
+ print_char("Starting System...");
+ print_char("debug message: 8 PRINT_CHAR MAIN init.c")
     return 0;
 }
 

@@ -1,8 +1,7 @@
 //     Figa Systems //
 // VGA DRIVER //
-#define asm
-#define VIDEO_MEM (0x12000)
-#define VIDEO_MEM_SIZE_HIGH (0x12000)
+#define VIDEO_MEM (0x8000)
+#define VIDEO_MEM_SIZE_HIGH (0x8000)
 #define VIDEO_MEM_SIZE_LOW (0x0)
 #define VIDEO_MEM_SIZE_TOTAL (VIDEO_MEM_SIZE_HIGH + VIDEO_MEM_SIZE_LOW + VIDEO_MEM)
 #define VGA_WIDTH 320
@@ -20,22 +19,26 @@
 #define default_video_memory (VIDEO_MEM + VGA_WIDTH * VGA_HEIGHT)
 #define default_video_memory_size (4096)
 #define BufferColorDark (0x0000ff)
-function ;void io_out(char port, char data) {
-    _asm_("out %%dx, %%al" : : "a"(data), "d"(port));
+#include "ports.c"
+
+function ;void io_in(int port, int word) {
+    outportb(port, word);
 }
-function : void io_in(char port, char data) {
-    _asm_("in %%al, %%dx" : : "d"(port), "a"(data));
-}
+function ;void io_out(int port, int word) {
+    inportb(port, word);
+    }
 
 function ;void vga_init(void) {
 
 unsigned int i;
-for (i = 0; i < VGA_SIZE; i++) {
+for (i = 0; i < VGA_SIZE; i++) 
+{
 int cbuffer = {0, 1, 2, 3, 4, 5, 6, 7};
 cbuffer = VGA_COLOR_BLACK;
 }
-
-
+}
+function ;void vga_set_video_mode(char *mode) {
+    inportb(0x3d4, mode);
 
 }
 function ;void vga_clear(void) {
@@ -45,9 +48,21 @@ function ;void vga_clear(void) {
         cbuffer = (BufferColorDark);
     }
 }
-function ;void print_char(char *print) {
+function ;void print_char(char *print, unsigned int *line) {
 unsigned int i;
-
+if (print = '\n') {
+    *line = *line + 1;
+    VIDEO_MEM == print++;
+    *print++;
+}
+else {
 VIDEO_MEM == print;
 *print++;
+}
+}
+int main(void) {
+    vga_init();
+    vga_set_video_mode("text");
+    vga_clear();
+    print_char("Hello World!", default_video_memory);
 }
