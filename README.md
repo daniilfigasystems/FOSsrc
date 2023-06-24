@@ -3,14 +3,7 @@
 
 Figa Systems FOSKRNL                                
 FOSKRNL is advanced monolithic kernel system
- 
-
-
-## About us
-
-Started from nothing continue with my friend
-
-![ver](https://img.shields.io/badge/version-debug-debug?style=flat-square&logo=whitesource
+ ![ver](https://img.shields.io/badge/version-debug-debug?style=flat-square&logo=whitesource
 )
 
 ![ver](https://img.shields.io/badge/Intel-Support-Support?style=flat-square&logo=intel&logoColor=black&labelColor=blue
@@ -18,6 +11,13 @@ Started from nothing continue with my friend
 
 ![ver](https://img.shields.io/badge/Compile-unsuccessful-unsuccessful?style=flat-square&logoColor=white&labelColor=yellow&color=red
 )
+
+
+## About us
+
+Started from nothing continue with my friend
+
+
 
 
 ## Some links about us
