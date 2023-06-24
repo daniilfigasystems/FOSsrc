@@ -2,7 +2,7 @@
 # Figa OS
 
 Figa Systems FOSKRNL                                
-FOSKRNL is advanced monolithic kernel system
+FOSKRNL is advanced monolithic kernel system                           
  ![ver](https://img.shields.io/badge/version-debug-debug?style=flat-square&logo=whitesource
 )
 
