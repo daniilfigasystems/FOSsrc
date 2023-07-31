@@ -1,6 +1,8 @@
 {
     "C_Cpp.errorSquiggles": "disabled",
     "files.associations": {
-        "vga.h": "c"
+        "vga.h": "c",
+        "string.h": "c",
+        "stdef.h": "c"
     }
 }

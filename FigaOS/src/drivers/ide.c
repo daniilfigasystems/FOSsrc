@@ -1,5 +1,6 @@
-/*                       IDE DRIVER FOR FIGAOS                    */
-/*                       FIGASYSTEMS 2020-2023                    */
+/*                       IDE driver for FOSKRNL                   */
+/*                       Figa Systems 2020-2023                   */
+/*                       All rights reserved Fsys                 */
 #include <init.h>
 #include <io.h>
 int drive_list = 0;
