@@ -34,41 +34,41 @@ Started from nothing continue with my friend
 To Compile Debug build you need: GCC, nasm
 
 ```bash
-  gcc -o FOSKRNL.bin /src/drivers/vga.c
+  no command
 ```
 
 
 ## Changelog
-BUILD.DBG.PUBLIC.0.ricerose
->Added Driver-Device managment system
->Rewrited VGA Driver
+BUILD.DBG.PUBLIC.WIN.0.RE.NT
+>Fully Rewriting Kernel make more similar to nt kernel
+>Started writing KeBugCheck and DbgPrint
 ## Usage of API
 To add new driver use 
 ```bash
-  register_driver(*nameofdriver*)
+  placeholder
 ```
 then it return you id of driver
 
 
 to remove driver use 
 ```bash
-  unregister_driver(*nameofdriver*)
+  placeholder
 ```
 to init vga (reset vga driver) use
 ```bash
-  init_vga(*backgroundclr* *forgegroundcolor*)
+  placeholder
 ```
 
 to print use 
 ```bash
-  print_string("*string*",*/n*)
+  placeholder
 ```
 
 ## Code errors
->0X3D4 VGA FAULT   
->FxFFF INIT FAULT   
->0x495 MEMORY ERROR   
->0x101 IO ERROR   
->0x16F SUBSYSTEM DISABLED   
->0x435 INVALID HANDLE     
+>placeholder
+>placeholder  
+>placeholder
+>placeholder 
+>placeholder  
+>placeholder  
          
