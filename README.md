@@ -41,7 +41,7 @@ To Compile Debug build you need: GCC, nasm
 ## Changelog
 BUILD.DBG.PUBLIC.WIN.0.RE.NT
 >Fully Rewriting Kernel make more similar to nt kernel
->
+>\n
 >Started writing KeBugCheck and DbgPrint
 ## Usage of API
 To add new driver use 
