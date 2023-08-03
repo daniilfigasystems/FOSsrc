@@ -1,6 +1,6 @@
 /*        Init Function for FOSKRNL      */
 /*        Figa Systems 2020-2023         */
-#include "../../drivers/vga.c"
+#include "PRIVATE/ntos/include/ntoskrnl.h"
 char* err_code[21] = {
     "VGA_FAULT", 
     "INIT_FAULT",
@@ -24,7 +24,7 @@ char* err_code[21] = {
     "KERNEL_NOT_INITIALIZED",
     "DRIVER_FAULT",
 };
-function ;void INIT_FAULT() {
+NTAPI INIT_FAULT() {
     if (err_code[0]) {
         print_string("0X3D4");
     }
@@ -44,7 +44,7 @@ function ;void INIT_FAULT() {
                             print_string("0x435");
                         }
     }
-    int testmain() {
+    NTAPI testmain() {
         
         print_string("a");
     }

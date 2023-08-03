@@ -1,6 +1,6 @@
-#include "../FOSKRNL/inc/stdint.h"
-#include "../FOSKRNL/inc/string.h"
-#include "../FOSKRNL/inc/stdef.h"
+#include "../ntos/inc/stdint.h"
+#include "../ntos/inc/string.h"
+#include "../ntos/inc/stdef.h"
 int REGISTRED_DRIVERS = {};
 
 void register_driver(const char *driver_name) {

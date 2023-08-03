@@ -3,6 +3,8 @@
     "files.associations": {
         "vga.h": "c",
         "string.h": "c",
-        "stdef.h": "c"
+        "stdef.h": "c",
+        "stdint.h": "c",
+        "ntoskrnl.h": "c"
     }
 }
