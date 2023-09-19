@@ -1,19 +1,31 @@
 /*               SCREEN FUNCTION FIGAOS           */
 /*               FIGASYSTEMS  2020-2023           */
-int x = 0,y = 0;
-char * vga  = (char *)0xB8000;
-void printChar(char ch,int color){
-  if(ch=='\n'||x==160){
-      x=0;
-      y++;
-  }
-  if(ch!='\n'){
-      vga[(y*160)+x]=ch;
-      vga[(y*160)+x+1]=color;
-      x+=2;
-  }
-}
-void print(char * str,int color){
-    for(int i =0;str[i]!=0;i++)
-     printChar(str[i],color);
-}
+#define VIDEO_ADDRESS 0xb8000
+#define VGA_WIDTH 80
+#define VGA_HEIGHT 25
+
+/* Hardware text mode color constants. */
+enum vga_color {
+	VGA_COLOR_BLACK = 0,
+	VGA_COLOR_BLUE = 1,
+	VGA_COLOR_GREEN = 2,
+	VGA_COLOR_CYAN = 3,
+	VGA_COLOR_RED = 4,
+	VGA_COLOR_MAGENTA = 5,
+	VGA_COLOR_BROWN = 6,
+	VGA_COLOR_LIGHT_GREY = 7,
+	VGA_COLOR_DARK_GREY = 8,
+	VGA_COLOR_LIGHT_BLUE = 9,
+	VGA_COLOR_LIGHT_GREEN = 10,
+	VGA_COLOR_LIGHT_CYAN = 11,
+	VGA_COLOR_LIGHT_RED = 12,
+	VGA_COLOR_LIGHT_MAGENTA = 13,
+	VGA_COLOR_LIGHT_BROWN = 14,
+	VGA_COLOR_WHITE = 15,
+};
+
+void terminal_init(void);
+void terminal_clearscreen();
+void terminal_setcolor(unsigned char color);
+void terminal_writestring(const char* data);
+unsigned char vga_entry_color(unsigned char fg, unsigned char bg);

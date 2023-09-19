@@ -6,3 +6,4 @@
 #define TEST NT5BUILD2128
 #define MAJORVERSION 5
 #define MINORVERSION 0
+#endif

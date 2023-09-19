@@ -6,3 +6,6 @@ typedef signed char int8;
 typedef signed short int16;
 typedef signed int int32;
 typedef signed long long int64;
+typedef int bool;
+#define TRUE 1
+#define FALSE 0

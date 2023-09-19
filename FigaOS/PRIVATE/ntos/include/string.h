@@ -1,8 +1,12 @@
-#include "string.c"
-void memcpy(char *src, char *dest, int nbytes);
 
-void memset(char *dest, char c, int nbytes);
+#ifndef _string_
+#define _string_
 
-void strcpy(char *dest, char *src);
+extern int memcpy(char *src, char *dest, int nbytes);
 
-void strlen(const char* str);
+extern int memset(char *dest, char c, int nbytes);
+
+extern int strcpy(char *dest, char *src);
+
+extern int strlen(const char* str);
+#endif

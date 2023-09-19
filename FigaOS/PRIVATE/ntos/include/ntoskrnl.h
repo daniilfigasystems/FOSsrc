@@ -6,5 +6,5 @@
 #include "stdlib.h"
 /*define nt things*/
 #define NTAPI __stdcall
-#define DbgPrint DbgPrintEarly
+#
 /**/

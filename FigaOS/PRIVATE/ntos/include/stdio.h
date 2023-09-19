@@ -1,15 +1,11 @@
-function ;void io_in(int port, int word) {
-    outportb(port, word);
-}
-function ;void io_out(int port, int word) {
-    inportb(port, word);
-    }
-    unsigned char inportb(unsigned short port) {
-    unsigned char result;
-    __asm__("in %%dx, %%al" : "=a" (result) : "d" (port));
-    return result;
-}
+#ifndef ASM_H
+#define ASM_H
 
-void outportb(unsigned short port, unsigned char data) {
-    __asm__("out %%al, %%dx" : : "a" (data), "d" (port));
-}
+#include <stdint.h>
+
+uint8_t inb(uint16_t port);
+void outb(uint16_t port, uint8_t value);
+void iowait(void);
+
+#endif
+
