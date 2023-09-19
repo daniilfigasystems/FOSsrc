@@ -74,6 +74,9 @@ void kprintf(char *string, unsigned int line, unsigned int color, char x1) {
 	int y = get_y_cur();
     int x = get_x_cur();
 	i=(y*x*2);
+			write_com(" printed string: ");
+			write_com(string);
+			write_com(" ");
 	while(*string != 0) {
 		if (*string == '\n') {
 			line++;

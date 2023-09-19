@@ -36,6 +36,38 @@ void * memmove(void * restrict dest, const void * restrict src, unsigned int cou
 	}
 	return dest;
 }
+int atoi (const char * str) {
+  int value = 0;
+  while(isdigit(*str)) {
+    value *= 10;
+    value += (*str)-'0';
+    str++;
+  }
+
+  return value;
+}
+
+char* itoa(int res) {
+    int size = 0;
+    int t = res;
+
+    while(t / 10 != 0) {
+        t = t/10;
+        size++;
+    }
+    static char ret[64];
+    size++;
+    ret[size] = '\0';
+    t = res;
+    int i = size - 1;
+    while(i >= 0) {
+        ret[i] = (t % 10) + '0';
+        t = t/10;
+        i--;
+    }
+
+    return ret;
+}
 
 int strcmp(const char * a, const char * b) {
 	unsigned int i = 0;

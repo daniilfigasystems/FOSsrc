@@ -36,4 +36,5 @@ void vesa_init() {
     r.eax = 0x4F02;
     r.ebx = 0x118;
     int32(0x10, &r);
+    write_com(" vesa initializated");
 }

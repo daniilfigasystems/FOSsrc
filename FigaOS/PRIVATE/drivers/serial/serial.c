@@ -29,7 +29,10 @@ int ite() {
     return inb(COM1+5) & 0x20;
     return inb(COM1);
 }
-void write_com(char* data) {
+void write_com(char *data) {
     while (ite() == 0);
-    outb(COM1, data);
+    int i;
+    for (i = 0; i < strlen(data); i++) {
+    outb(COM1, data[i]);
+    }
 }

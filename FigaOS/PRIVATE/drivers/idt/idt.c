@@ -42,5 +42,5 @@ void idt_install()
 extern void idt_load();
     
     idt_load();
-    write_com("idt initializated");
+    write_com(" idt initializated ");
 }		
