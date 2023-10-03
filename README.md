@@ -41,13 +41,13 @@ NOTE makefile only for windows you can remove wsl command if you use linux
 ## Changelog
 foskrnl.codename.sweephorn
 >Added:
->VESA(not working)
->Serial(for now only COM1 and COM2)
->Made header files for all functions
->IDT
->GDT
->ISR
->IRQ
+>VESA(not working),
+>Serial(for now only COM1 and COM2),
+>Made header files for all functions,
+>IDT,
+>GDT,
+>ISR,
+>IRQ,
 ## Usage of API
 To add new driver use 
 ```bash
