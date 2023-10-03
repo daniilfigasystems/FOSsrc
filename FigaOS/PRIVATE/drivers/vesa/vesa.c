@@ -32,9 +32,10 @@ unsigned int physbase; // your LFB (Linear Framebuffer) address  ;) the new addr
 unsigned int reserved1;
 unsigned short reserved2;
 } __attribute__((packed));
-void vesa_init() {
+void vesa_init() 
+{
     r.eax = 0x4F02;
     r.ebx = 0x118;
     int32(0x10, &r);
-    write_com(" vesa initializated");
+    write_com(0x3f8, " vesa initializated");
 }

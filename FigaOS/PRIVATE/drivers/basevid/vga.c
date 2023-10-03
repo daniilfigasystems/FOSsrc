@@ -12,9 +12,11 @@ typedef struct regs
 char* vmem;
 int row, col;
 int color;
-void kcls(int clr) {
+void kcls(int clr) 
+{
 	vmem = (char *)0xb8000;
 	unsigned int i=0;
+	write_com(0x3f8, " cleared screen ");
 	while (i < (80*25*2)) {
 		vmem[i] = ' ';
 		i++;
@@ -31,24 +33,28 @@ unsigned short get_cur_pos(void)
     pos |= ((unsigned short)inb(0x3D5)) << 8;
     return pos;
 }
-void enable_cur(int curs, int cure) {
+void enable_cur(int curs, int cure) 
+{
 	outb(0x3D4, 0x0A);
 	outb(0x3D5, (inb(0x3D5) & 0xC0) | curs);
 	outb(0x3D4, 0x0B);
 	outb(0x3D5, (inb(0x3D5) & 0xE0) | cure);
 }
-void disable_cur() {
+void disable_cur() 
+{
 	outb(0x3D4, 0x0A);
 	outb(0x3D5, 0x20);
 }
-void update_cur(int x, int y) {
+void update_cur(int x, int y) 
+{
 	int pos = y*80+x;
 	outb(0x3D4, 0x0F);
 	outb(0x3D5, (int) (pos & 0xFF));
 	outb(0x3D4, 0x0E);
 	outb(0x3D5, (int) ((pos >> 8) & 0xFF));
 }
-int get_x_cur() {
+int get_x_cur() 
+{
 	int pos = 0;
     outb(0x3D4, 0x0F);
     pos |= inb(0x3D5);
@@ -58,7 +64,8 @@ int get_x_cur() {
 	x = pos % 80;
 	return x;
 }
-int get_y_cur() {
+int get_y_cur() 
+{
 	int pos = 0;
     outb(0x3D4, 0x0F);
     pos |= inb(0x3D5);
@@ -68,23 +75,26 @@ int get_y_cur() {
 	y = pos / 80;
 	return y;
 }
-void kprintf(char *string, unsigned int line, unsigned int color, char x1) {
+void kprintf(char *string, unsigned int line, unsigned int color, char x1) 
+{
 	char *vmem = (char *) 0xb8000;
 	unsigned int i=0;
 	int y = get_y_cur();
     int x = get_x_cur();
 	i=(y*x*2);
-			write_com(" printed string: ");
-			write_com(string);
-			write_com(" ");
+			write_com(0x3f8, " printed string: ");
+			write_com(0x3f8, string);
+			write_com(0x3f8, " ");
 	while(*string != 0) {
-		if (*string == '\n') {
+		if (*string == '\n') 
+		{
 			line++;
 			i=(line*x*2);
 			*string++;
 			update_cur(x, y+1);
 		}
-		else {
+		else 
+		{
 			vmem[i]=*string;
 			*string++;
 			i++;

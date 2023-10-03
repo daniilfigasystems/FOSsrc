@@ -135,5 +135,7 @@ char get_ascii_char(unsigned char key_code)
 }
 int read_char()
 {
-
+ char *keymap = inb(0x60);
+ *keymap = inb(0x60);
+ return *keymap;
 }

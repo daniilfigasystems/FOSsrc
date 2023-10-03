@@ -1,7 +1,7 @@
 #include "../ntos/inc/stdint.h"
 #include "../ntos/inc/string.h"
 #include "../ntos/inc/stdef.h"
-int REGISTRED_DRIVERS = {};
+int REGISTRED_DRIVERS[25] = {};
 
 void register_driver(const char *driver_name) {
     for (uint8 id; id < sizeof(REGISTRED_DRIVERS) / sizeof(REGISTRED_DRIVERS[0]); id++) {

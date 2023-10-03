@@ -1,4 +1,4 @@
-
+#include "stdef.h"
 
 int k_main() {
 int e = "d";
@@ -12,5 +12,8 @@ irq_install();
 gdt_install();
 kcls(0x07);
 vesa_init();
+page_init();
+enable_paging();
+checkfpu();
 kprintf("test", 1, 0x07, 1);
 }

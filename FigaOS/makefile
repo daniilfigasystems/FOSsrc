@@ -1,4 +1,4 @@
-all: buildbootloader buildcom buildkeyb buildstr buildinit buildgdtasm buildgdt buildidt buildidtasm buildpit buildint32 buildvesa buildasm buildvga builddbgprint buildboot buildbsod buildisr buildisrasm buildirq buildirqasm  link remove
+all: buildbootloader buildfpu buildfpudetect buildcom buildmalloc buildpageasm buildkeyb buildstr buildinit buildgdtasm buildgdt buildidt buildidtasm buildpit buildint32 buildvesa buildasm buildvga builddbgprint buildboot buildbsod buildisr buildisrasm buildirq buildirqasm  link remove
 notrem: buildinit buildpit buildasm buildvga builddbgprint buildboot buildbsod link
 buildinit: PRIVATE/ntos/init/init.c ; wsl gcc -IPRIVATE/ntos/include -c PRIVATE/ntos/init/init.c -o bin/init.o -m32
 buildbsod: PRIVATE/ntos/ke/bugcheck.c ; wsl gcc -IPRIVATE/ntos/include -c PRIVATE/ntos/ke/bugcheck.c -o bin/bugcheck.o -m32
@@ -22,5 +22,9 @@ buildvesa: PRIVATE/drivers/vesa/vesa.c ; wsl gcc -IPRIVATE/ntos/include -c PRIVA
 buildbootloader: PRIVATE/bootloader/start.s ; wsl nasm -f elf32 PRIVATE/bootloader/start.s -o bin/startboot.o
 buildcom: PRIVATE/drivers/serial/serial.c ; wsl gcc -IPRIVATE/ntos/include -c PRIVATE/drivers/serial/serial.c -o bin/serial.o -m32
 buildvbeasm: PRIVATE/drivers/vesa/vbe.s ; wsl nasm -f elf32 PRIVATE/drivers/vesa/vbe.s -o bin/vbe.o
-link: bin/init.o bin/vga.o bin/krnent.o bin/asm.o ; wsl ld -T linker.ld -m elf_i386 -o bin/vga.bin --allow-multiple-definition -nostdlib  bin/bugcheck.o bin/vesa.o bin/init.o bin/vga.o bin/pit.o bin/serial.o bin/krnent.o bin/gdt.o bin/asm.o bin/dbgprint.o bin/gdtasm.o bin/idt.o bin/idtasm.o bin/string.o bin/isr.o bin/israsm.o bin/irq.o bin/irqasm.o bin/keyb.o bin/int32.o 
+buildmalloc: PRIVATE/ntos/mm/malloc.c ; wsl gcc -IPRIVATE/ntos/include -c PRIVATE/ntos/mm/malloc.c -o bin/malloc.o -m32
+buildpageasm: PRIVATE/ntos/mm/page.s ; wsl nasm -f elf32 PRIVATE/ntos/mm/page.s -o bin/pageasm.o
+buildfpu: PRIVATE/ntos/fpu/fpu.c ; wsl gcc -IPRIVATE/ntos/include -c PRIVATE/ntos/fpu/fpu.c -o bin/fpu.o -m32
+buildfpudetect: PRIVATE/ntos/fpu/fpudetect.s ; wsl nasm -f elf32 PRIVATE/ntos/fpu/fpudetect.s -o bin/fpucheck.o
+link: bin/init.o bin/vga.o bin/krnent.o bin/asm.o ; wsl ld -T linker.ld -m elf_i386 -o bin/vga.bin --allow-multiple-definition -nostdlib  bin/pageasm.o bin/bugcheck.o bin/malloc.o bin/vesa.o bin/init.o bin/vga.o bin/pit.o bin/serial.o bin/krnent.o bin/gdt.o bin/asm.o bin/dbgprint.o bin/gdtasm.o bin/idt.o bin/idtasm.o bin/string.o bin/isr.o bin/israsm.o bin/irq.o bin/irqasm.o bin/keyb.o bin/int32.o bin/fpu.o bin/fpucheck.o
 remove: ; del bin\vga.o bin\init.o bin\pit.o bin\dbgprint.o bin\asm.o bin\bugcheck.o

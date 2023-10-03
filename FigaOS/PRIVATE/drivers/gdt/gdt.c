@@ -47,7 +47,7 @@ void gdt_install()
 
     gdt_set_gate(1, 0, 0xFFFFFFFF, 0x9A, 0xCF);
     gdt_set_gate(2, 0, 0xFFFFFFFF, 0x92, 0xCF);
-    write_com(" gdt initialized");
+    write_com(0x3f8, " gdt initialized");
 extern void gdt_flush();
 
     gdt_flush();
