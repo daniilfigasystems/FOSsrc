@@ -15,34 +15,39 @@ FOSKRNL is advanced monolithic kernel system
 
 ## About us
 
-Started from nothing continue with my friend
+Started learning c then made first program up to own os
 
 
 
 
 ## Some links about us
 
- - [placeholder](placeholder)
+ - [placeholder](docs/aboutus.md)
 
 ## Documentation
 
-[Documentation](https://linktodocumentation)
+[Documentation](docs/documentation.md)
 
 
 ## Compiling
 
-To Compile Debug build you need: GCC, nasm
-
+To Compile Debug build you need: GCC, nasm, make
+NOTE makefile only for windows you can remove wsl command if you use linux
 ```bash
-  no command
+  make
 ```
 
 
 ## Changelog
-BUILD.DBG.PUBLIC.WIN.0.RE.NT
->Fully Rewriting Kernel make more similar to nt kernel
->\n
->Started writing KeBugCheck and DbgPrint
+foskrnl.codename.sweephorn
+>Added:
+>VESA(not working)
+>Serial(for now only COM1 and COM2)
+>Made header files for all functions
+>IDT
+>GDT
+>ISR
+>IRQ
 ## Usage of API
 To add new driver use 
 ```bash
