@@ -5,6 +5,7 @@
         "string.h": "c",
         "stdef.h": "c",
         "stdint.h": "c",
-        "ntoskrnl.h": "c"
+        "ntoskrnl.h": "c",
+        "isr.h": "c"
     }
 }

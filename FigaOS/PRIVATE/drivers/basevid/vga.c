@@ -1,22 +1,15 @@
 #include "stdarg.h"
-typedef struct regs
-{
-    unsigned int gs, fs, es, ds;      
-    unsigned int edi, esi, ebp, esp, ebx, edx, ecx, eax;  
-    unsigned int int_no, err_code;    
-    unsigned int eip, cs, eflags, useresp, ss;   
-    unsigned int ax, dx, cx;
-    unsigned int bl, bh;
-    unsigned int di; 
-};
+#include "vga.h"
+#include "serial.h"
+#include "stdarg.h"
 char* vmem;
-int row, col;
+int row, col, lps;
 int color;
 void kcls(int clr) 
 {
-	vmem = (char *)0xb8000;
+	vmem = (char *)VIDEO_ADDRESS;
 	unsigned int i=0;
-	write_com(0x3f8, " cleared screen ");
+	write_com(COM1, " cleared screen ");
 	while (i < (80*25*2)) {
 		vmem[i] = ' ';
 		i++;
@@ -75,23 +68,24 @@ int get_y_cur()
 	y = pos / 80;
 	return y;
 }
-void kprintf(char *string, unsigned int line, unsigned int color, char x1) 
+
+void kprintf(char *string, unsigned int color) 
 {
-	char *vmem = (char *) 0xb8000;
+	char *vmem = (char *) VIDEO_ADDRESS;
 	unsigned int i=0;
-	int y = get_y_cur();
-    int x = get_x_cur();
-	i=(y*x*2);
-			write_com(0x3f8, " printed string: ");
-			write_com(0x3f8, string);
-			write_com(0x3f8, " ");
+	i=(row*col*2);
+			write_com(COM1, " printed string: ");
+			write_com(COM1, string);
+			write_com(COM1, " ");
 	while(*string != 0) {
 		if (*string == '\n') 
 		{
-			line++;
-			i=(line*x*2);
+			row++;
+			col = 0;
+			col += 80;
+			i=(row*col*2);
 			*string++;
-			update_cur(x, y+1);
+			
 		}
 		else 
 		{
@@ -100,7 +94,29 @@ void kprintf(char *string, unsigned int line, unsigned int color, char x1)
 			i++;
 			vmem[i]=color;
 			i++;
-			update_cur(x+1,y+1);
+			col++;
+		}
+	}
+}
+void dbgprint(char *str, ...) {
+	char **arg = (char **)&str;
+	int c;
+	arg++;
+	while ((c = *str++) != 0) {
+		if (c != '%') {
+			kprintf(*str, 0x17);
+		}
+		else {
+			char *p;
+			c = *str++;
+			switch(c) {
+				case 's':
+				p = *arg++;
+				if (!p) {
+					p = "(0)";
+				}
+				break;
+			}
 		}
 	}
 }

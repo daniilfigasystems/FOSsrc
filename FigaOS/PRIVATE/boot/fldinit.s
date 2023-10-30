@@ -1,5 +1,5 @@
-bits 32        ;nasm directive
-section .text
+bits 32
+    section .text
     ;multiboot spec
     align 4
     dd 0x1BADB002            ;magic
@@ -10,7 +10,10 @@ global start
 extern k_main    ;k_main is defined in the kernel.c file
 
 start:
-
+mov eax, cr0 
+or al, 1       
+mov cr0, eax
+sti
    ; stop interrupts
     call k_main
 

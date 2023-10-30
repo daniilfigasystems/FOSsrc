@@ -1,6 +1,7 @@
 global irq0
 global irq1
-global irq14             ; You complete the rest!
+global irq13 
+global irq14            ; You complete the rest!
 global irq15
 
 ; 32: IRQ0
@@ -17,8 +18,18 @@ irq1:
     push byte 0 ; Note that these don't push an error code on the stack
     push byte 33
     jmp irq_common_stub
-    irq14:
+irq10:
     cli
+    push byte 0
+    push byte 42
+    jmp irq_common_stub
+irq13:
+    cli
+    push byte 0
+    push byte 45
+    jmp irq_common_stub
+irq14:
+    cliirq_common_stub
     push byte 0
     push byte 46
     jmp irq_common_stub

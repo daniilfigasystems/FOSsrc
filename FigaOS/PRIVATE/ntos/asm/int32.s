@@ -1,5 +1,7 @@
 [bits 32]
 global int32, _int32
+extern idtp
+extern gp
 struc regs16_t
         .di     resw 1
         .si     resw 1
@@ -42,8 +44,8 @@ section .text
 
         reloc: use32                                                                                                                              ; %*% From here on gets copy startting from INT32_BASE
                 mov  [REBASE(stack32_ptr)], esp        ; save 32bit stack pointer
-                sidt [REBASE(idt32_ptr)]               ; save 32bit idt pointer
-                sgdt [REBASE(gdt32_ptr)]               ; save 32bit gdt pointer
+                sidt [REBASE(idtp)]               ; save 32bit idt pointer
+                sgdt [REBASE(gp)]               ; save 32bit gdt pointer
                 lgdt [REBASE(gdt16_ptr)]               ; load 16bit gdt pointer
                 lea  esi, [esp+0x24]                   ; set position of intnum on 32bit stack
                 lodsd                                  ; read intnum into eax
@@ -103,8 +105,8 @@ section .text
                 mov  gs, ax                            ; reset gs selector
                 mov  ss, ax                            ; reset ss selector
 
-                lgdt [REBASE(gdt32_ptr)]               ; restore 32bit gdt pointer
-                lidt [REBASE(idt32_ptr)]               ; restore 32bit idt pointer
+                lgdt [REBASE(gp)]               ; restore 32bit gdt pointer
+                lidt [REBASE(idtp)]               ; restore 32bit idt pointer
                 mov  esp, [REBASE(stack32_ptr)]        ; restore 32bit stack pointer
                 mov  esi, STACK16                      ; set copy source to 16bit stack
                 lea  edi, [esp+0x28]                   ; set position of regs pointer on 32bit stack

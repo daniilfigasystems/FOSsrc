@@ -1,12 +1,7 @@
-
-struct regs
-{
-    unsigned int gs, fs, es, ds;      
-    unsigned int edi, esi, ebp, esp, ebx, edx, ecx, eax;  
-    unsigned int int_no, err_code;    
-    unsigned int eip, cs, eflags, useresp, ss;    
-};
-		
+#include "regs.h"
+#include "isr.h"
+#include "serial.h"
+#include "idt.h"
 
 extern void isr0();
 extern void isr1();

@@ -14,7 +14,6 @@ isr0:
                    ; uniform stack frame
     push byte 0
     jmp isr_common_stub
-
 ;  1: Debug Exception
 isr1:
     cli

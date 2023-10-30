@@ -1,9 +1,6 @@
 @echo off
 echo                            FIGA NT COMPILER
-set arg1 = %1
-set arg2 = %2
-set args = %3
-gcc %1 -o %2 %3
+make
 
 echo         COMPILER LOG %date% %time% >> complogs.log
 ver >> complogs.log

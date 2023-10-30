@@ -1,6 +1,5 @@
+#include "serial.h"
 
-#define COM1 0x3f8
-#define COM2 0x2f8
 void int_com1() 
 {
 outb(COM1+1, 0x00);

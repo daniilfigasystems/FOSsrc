@@ -1,3 +1,4 @@
+#include "string.h"
 void * memcpy(void * restrict dest, const void * restrict src, unsigned int count) {
 	asm volatile ("cld; rep movsb" : "+c" (count), "+S" (src), "+D" (dest) :: "memory");
 	return dest;
@@ -93,10 +94,9 @@ void * memset(void * b, int val, unsigned int count) {
 
 
 unsigned short * memsetw(unsigned short * dest, unsigned short val, int count) {
-	int i = 0;
-	for ( ; i < count; ++i ) {
+	for (int i = 0; i < count; ++i ) {
 		dest[i] = val;
-	}
+    }
 	return dest;
 }
 

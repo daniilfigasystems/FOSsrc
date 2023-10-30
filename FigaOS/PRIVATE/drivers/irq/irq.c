@@ -1,15 +1,12 @@
+#include "regs.h"
+#include "irq.h"
 
-struct regs
-{
-    unsigned int gs, fs, es, ds;      
-    unsigned int edi, esi, ebp, esp, ebx, edx, ecx, eax;  
-    unsigned int int_no, err_code;    
-    unsigned int eip, cs, eflags, useresp, ss;    
-};
 
 
 extern void irq0();
-extern void irq1();    
+extern void irq1();  
+extern void irq10(); 
+extern void irq13();    
 extern void irq14();             
 extern void irq15();
 
@@ -51,11 +48,11 @@ void irq_remap(void)
 void irq_install()
 {
     irq_remap();
-
     idt_set_gate(32, (unsigned)irq0, 0x08, 0x8E);
     idt_set_gate(33, (unsigned)irq1, 0x08, 0x8E);
+    idt_set_gate(42, (unsigned)irq10, 0x08, 0x8E);
+    idt_set_gate(45, (unsigned)irq13, 0x08, 0x8E);
     idt_set_gate(46, (unsigned)irq14, 0x08, 0x8E);
-         
     idt_set_gate(47, (unsigned)irq15, 0x08, 0x8E);
     write_com(0x3f8, " irq installed ");
 }
