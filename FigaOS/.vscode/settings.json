@@ -1,11 +1,15 @@
 {
-    "C_Cpp.errorSquiggles": "disabled",
+    "C_Cpp.errorSquiggles": "enabled",
     "files.associations": {
-        "vga.h": "c",
-        "string.h": "c",
-        "stdef.h": "c",
-        "stdint.h": "c",
-        "ntoskrnl.h": "c",
-        "isr.h": "c"
-    }
+        "*.h": "c",
+        "*.h": "c",
+    },
+    "editor.cursorStyle": "underline-thin",
+    "editor.bracketPairColorization.independentColorPoolPerBracketType": true,
+    "editor.defaultColorDecorators": true,
+    "editor.definitionLinkOpensInPeek": true,
+    "editor.experimentalWhitespaceRendering": "font",
+    "C_Cpp.default.compilerPath": "C:\\gcc\\bin\\gcc.exe",
+    "C_Cpp.autoAddFileAssociations": false,
+    "jupyter.interactiveWindow.textEditor.autoAddNewCell": false
 }
