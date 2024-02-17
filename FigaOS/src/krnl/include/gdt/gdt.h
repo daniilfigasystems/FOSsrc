@@ -11,6 +11,8 @@
 #ifndef _GDT_
 #define _GDT_
 
+#include "FOSdef.h"
+
 struct gdt_entry
 {
     unsigned short limit_low;
@@ -18,6 +20,13 @@ struct gdt_entry
     unsigned char limit_middle;
     unsigned char base_middle;
     unsigned char access;
+    unsigned int read_write;
+    unsigned int code;
+    unsigned int code_data_seg;
+    unsigned int confortming_ex_d;
+    unsigned int DPL;
+    unsigned short present;
+    unsigned int available;
     unsigned char granularity;
     unsigned char limit_high;
     unsigned char base_high;
@@ -29,9 +38,6 @@ struct gdt_pointer
     unsigned int base;
 } __attribute__((packed));
 
-struct gdt_entry gdt[3];
-struct gdt_pointer gp;
-
 /** @brief Load Global descriptor table
  *  @param num Number of Global descriptor table
  *  @param base Base address
@@ -40,22 +46,24 @@ struct gdt_pointer gp;
  *  @param granularity Global descriptor table granularity
  *  @return Nothing
 */
-void 
+FOSKERNELAPI
+VOID
 GDTSetGate(
     int num, 
     unsigned long base, 
     unsigned long limit, 
     unsigned char access, 
     unsigned char granularity
-    );
+);
 
 /** @brief Load Global descriptor table
- *  @param gp Pointer to global descriptor table
+ *  @param void Nothing
  *  @return Nothing
 */
-void 
+FOSKERNELAPI
+VOID
 GDTInstall(
-    struct gdt_pointer gp
-    );
+    void
+);
 
 #endif

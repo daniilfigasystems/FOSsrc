@@ -16,7 +16,7 @@ memcpy(
 	void *dst, 
 	void *src, 
 	size_t count
-	)
+)
 {
 	const unsigned int *a = src;
 	unsigned int *b = dst;
@@ -26,11 +26,11 @@ memcpy(
 	}
 	else if ((unsigned long)dst < (unsigned long)src)
 	{
-		for (int i = 0; i < count; ++i)
+		for (size_t i = 0; i < count; ++i)
 		{
 			b[i] = a[i];
 		}
-		return b;
+		return (unsigned int) b;
 	}
 	else if ((unsigned long)dst > (unsigned long)src)
 	{
@@ -38,15 +38,16 @@ memcpy(
 		{
 			b[i-1] = a[i-1];
 		}
-		return b;
+		return (unsigned int) b;
 	}
+	return 0;
 }
 
 int 
 max(
 	int a, 
 	int b
-	) 
+) 
 {
 	return (a > b) ? a : b;
 }
@@ -55,7 +56,7 @@ int
 min(
 	int a, 
 	int b
-	) 
+) 
 {
 	return (a > b) ? b : a;
 }
@@ -63,7 +64,7 @@ min(
 int 
 abs(
 	int a
-	) 
+) 
 {
 	return (a >= 0) ? a : -a;
 }
@@ -72,7 +73,7 @@ void
 swap(
 	int *a, 
 	int *b
-	) 
+) 
 {
 	int t = *a;
 	*a = *b;
@@ -85,7 +86,7 @@ memmove(
 	void * restrict dest, 
 	void * restrict src, 
 	unsigned int count
-	) 
+) 
 {
 	unsigned int i;
 	unsigned long *a = dest;
@@ -111,7 +112,7 @@ memmove(
 int 
 atoi (
 	const char * str
-	) 
+) 
 {
   int value = 0;
   while(str != 0)  
@@ -127,7 +128,7 @@ char
 * 
 itoa(
 	int res
-	) 
+) 
 {
     int size = 0;
     int t = res;
@@ -156,7 +157,7 @@ int
 strcmp(
 	const char * a, 
 	const char * b
-	) 
+) 
 {
 	for (unsigned int i = 0; i < sizeof(a); i++) 
 	{
@@ -174,6 +175,7 @@ strcmp(
 			}
 		}
 	}
+	return 0;
 }
 
 void
@@ -182,7 +184,7 @@ memset(
 	void* dst,
 	int val, 
 	size_t count
-	)
+)
 {
 	unsigned long *a = dst;
 	if (count == 0)
@@ -207,11 +209,11 @@ unsigned short * memsetw(unsigned short * dest, unsigned short val, int count) {
 unsigned int 
 strlen(
 	const char *str
-	) 
+) 
 {
 	int i;
-	while (str[i] != (char)0) 
-	{
+	while (str[i] != (char)0 || str[i] != '\0') 
+	{ 
 		++i;
 	}
 	return i;

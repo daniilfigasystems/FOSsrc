@@ -25,7 +25,7 @@ memcpy(
 	void *dst, 
 	void *src, 
 	size_t count
-	);
+);
 
 /** @brief Get largest value from two values
  *  @param a First Value
@@ -36,7 +36,7 @@ int
 max(
 	int a, 
 	int b
-	);
+);
 
 /** @brief Get smallest value from two values
  *  @param a First Value
@@ -47,7 +47,7 @@ int
 min(
 	int a, 
 	int b
-	);
+);
 
 /** @brief Get absolute value of value
  *  @param a Value
@@ -56,7 +56,7 @@ min(
 int 
 abs(
 	int a
-	);
+);
 
 /** @brief Swaps two values
  *  @param a First value
@@ -67,7 +67,7 @@ void
 swap(
 	int *a, 
 	int *b
-	);
+);
 
 /** @brief Moves n bytes of source to destination
  *  @param dest The destination
@@ -81,7 +81,7 @@ memmove(
 	void * restrict dest, 
 	void * restrict src, 
 	unsigned int count
-	);
+);
 
 /** @brief Converts string to integer
  *  @param str String to convert
@@ -90,7 +90,7 @@ memmove(
 int 
 atoi (
 	const char * str
-	);
+);
 
 /** @brief Converts integer to string 
  *  @param res Value to convert
@@ -100,7 +100,7 @@ char
 * 
 itoa(
 	int res
-	);
+);
 
 /** @brief Compare two strings
  *  @param a First string to compare
@@ -111,7 +111,7 @@ int
 strcmp(
 	const char * a, 
 	const char * b
-	);
+);
 
 /** @brief Set n bytes of destination with specified value
  *  @param dest The destination
@@ -125,16 +125,15 @@ memset(
 	void* dst,
 	int val, 
 	size_t count
-	);
+);
 
-/** Will be deleted */
-/** @brief DEPRECATED Set n bytes of destination with specified value
+/** @brief ((DEPRECATED) Use memset instead of this) Set n bytes of destination with specified value
  *  @param dest The destination
  *  @param val Specific value to set
  *  @param count Number of bytes to set
  *  @return Returns destination
 */
-unsigned short * memsetw(unsigned short * dest, unsigned short val, int count);
+unsigned short * memsetw(unsigned short * dest, unsigned short val, int count) __attribute__((deprecated));
 
 /** @brief Get length of a string
  *  @param str String to get length
@@ -143,6 +142,6 @@ unsigned short * memsetw(unsigned short * dest, unsigned short val, int count);
 unsigned int 
 strlen(
 	const char *str
-	);
+);
 
 #endif

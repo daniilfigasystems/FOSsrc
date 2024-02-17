@@ -11,5 +11,9 @@
     "editor.experimentalWhitespaceRendering": "font",
     "C_Cpp.default.compilerPath": "C:\\gcc\\bin\\gcc.exe",
     "C_Cpp.autoAddFileAssociations": false,
-    "jupyter.interactiveWindow.textEditor.autoAddNewCell": false
+    "jupyter.interactiveWindow.textEditor.autoAddNewCell": false,
+    "editor.defaultFormatter": "ms-vscode.cpptools",
+    "editor.formatOnPaste": true,
+    "editor.formatOnSave": false,
+    "editor.formatOnType": true
 }

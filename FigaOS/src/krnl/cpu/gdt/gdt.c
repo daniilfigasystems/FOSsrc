@@ -9,15 +9,21 @@
 
 
 #include "gdt/gdt.h"
+#include "FOSdef.h"
+#include "check/bugcheck.h"
 
-void 
+struct gdt_entry gdt[6];
+struct gdt_pointer gp;
+
+FOSKERNELAPI
+VOID
 GDTSetGate(
     int num, 
     unsigned long base, 
     unsigned long limit, 
     unsigned char access, 
     unsigned char granularity
-    )
+)
 {
     gdt[num].base_low = (base & 0xFFFF);
     gdt[num].base_middle = (base >> 16) & 0xFF;
@@ -32,14 +38,21 @@ GDTSetGate(
     gdt[num].access = access;
 }
 
-void 
+FOSKERNELAPI
+VOID
 GDTInstall(
-    struct gdt_pointer gp
-    )
+    void
+)
 {
     gp.limit = (sizeof(struct gdt_entry) * 3) - 1;
-    gp.base = &gdt;
+    gp.base = (unsigned int) &gdt;
 
     GDTSetGate(0,0,0,0,0);
     asm volatile ("lgdt %0" :: "m"(gp));
+
+    if (gp.base == 0)
+    {
+        KeBugCheck(FATAL_UNHANDLED_KERNEL_EXPECTION);
+
+    }
 }
