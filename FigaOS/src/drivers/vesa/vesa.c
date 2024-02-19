@@ -77,10 +77,10 @@ InbvFillRect(
     INT VBEPosition = (X*Y) + StartPosition;
 
     for (int i = StartX; i < StartX + X; i++)
-     {
-	     for (int j = StartY * 1024; j <  StartY * 1024 + Y; j++)
+    {
+	    for (int j = StartY * 1024; j <  StartY * 1024 + Y; j++)
             VBEAddressPointer[j + StartX] = Color;
-         VBEAddressPointer += 1024;
+        VBEAddressPointer += 1024;
     }
 }
 
