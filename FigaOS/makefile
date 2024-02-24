@@ -2,7 +2,7 @@ arch = i386
 Version = 0.001dev
 qemuargs = -d mmu,pcall,cpu_reset,int
 kernelname = foskrnl$(arch).exe
-linktargets = bin/boot.o bin/init.o bin/gdt.o bin/mm.o bin/vga.o bin/vesa.o bin/bugcheck.o bin/string.o bin/io.o bin/serial.o bin/cmos.o bin/fonts.o
+linktargets = bin/boot.o bin/init.o bin/gdt.o bin/mm.o bin/vga.o bin/vesa.o bin/bugcheck.o bin/string.o bin/io.o bin/serial.o bin/cmos.o bin/fonts.o bin/bios.o bin/biosasm.o
 LOGFILE = build.log
 ifeq ($(value arch), i386)
 nasmargs = -f elf32
@@ -208,6 +208,10 @@ clean:
 	$(RM) -f bin/*.o
 	$(RM) -f bin/*.exe
 	$(RM) -f bin/*.bin
+	$(RM) -f bin/*.iso
+	$(RM) -f *.log
+	$(RM) -f krnlsum.txt
+	$(RM) -f isosum.txt
 	@echo Cleaning done
 
 	
