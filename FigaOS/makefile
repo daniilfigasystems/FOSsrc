@@ -70,9 +70,6 @@ setcolor:
 	@echo ## ASM VERSION ##
 	@$(ASM) --version
 	@$(SLEEP) 0.25
-	@echo ## CC VERSION ##
-	@$(CC) --version
-	@$(SLEEP) 0.25
 	@echo ## LD VERSION ##
 	@$(LD) --version
 	@$(SLEEP) 0.25
