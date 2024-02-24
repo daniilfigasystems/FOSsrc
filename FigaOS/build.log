@@ -1,13 +1,14 @@
-Operating system:
-Architecture: i386
-Linker: ld
-C Compiler: gcc
-Assembler Compiler: nasm
-Remove tool: rm
-C Compiler arguments: -m32 -Isrc/krnl/include -g -W -ffreestanding -Wformat=0
-Assembler Compiler arguments: -f elf32
-Linked objects: bin/boot.o bin/init.o bin/gdt.o bin/mm.o bin/vga.o bin/vesa.o bin/bugcheck.o bin/string.o bin/io.o bin/serial.o bin/cmos.o bin/fonts.o
-Kernel name: foskrnli386.exe
-Kernel version: 0.001dev
-Kernel version: 0.001dev
-Iso Image: bin/figaOS.iso
+###### BUILD SUCCESSFUL ###### 
+########## SUMMARY ########## 
+Operating system: Windows_NT 
+Architecture: i386 
+Linker: wsl ld 
+C Compiler: wsl gcc 
+Assembler Compiler: wsl nasm 
+Remove tool: wsl rm 
+C Compiler arguments: -m32 -Isrc/krnl/include -g -W -ffreestanding -Wformat=0 
+Assembler Compiler arguments: -f elf32 
+Linked objects: bin/boot.o bin/init.o bin/gdt.o bin/mm.o bin/vga.o bin/vesa.o bin/bugcheck.o bin/string.o bin/io.o bin/serial.o bin/cmos.o bin/fonts.o  
+Kernel name: foskrnli386.exe 
+Kernel version: 0.001dev 
+########## SUMMARY ########## 
