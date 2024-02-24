@@ -31,4 +31,10 @@ int KernelEntry(unsigned long magic, MULTIBOOT_INFO *addr)
     GDTInstall();
 
     InbvInitVideoBuffer(addr->framebuffer_addr, addr->framebuffer_pitch, addr->framebuffer_width, addr->framebuffer_height, addr->framebuffer_bpp, addr->framebuffer_type);
+
+    SerialInit(&Com1, COM1);
+    SerialWrite(&Com1, "init: Welcome to os");
+    InbvFillRect(0, 0, addr->framebuffer_width, addr->framebuffer_height, 0x4444);
+    InbvLoadPSFFont();
 }
+
