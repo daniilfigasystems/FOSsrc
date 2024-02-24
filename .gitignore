@@ -1,0 +1,11 @@
+# Not necessary data by IDEs and code editors
+.metadata/
+.vscode/
+
+# Binaries
+FigaOS/bin/*
+FigaOS/FOSenv/nasm/
+
+# Other files
+*.log
+*sum.txt
