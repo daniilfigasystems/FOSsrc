@@ -1,0 +1,6 @@
+# Not necessary data by IDEs and code editors
+.metadata/
+.vscode/
+
+# Binaries
+FigaOS/bin/*
