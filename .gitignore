@@ -5,3 +5,7 @@
 # Binaries
 FigaOS/bin/*
 FigaOS/FOSenv/nasm/
+
+# Other files
+*.log
+*sum.txt
