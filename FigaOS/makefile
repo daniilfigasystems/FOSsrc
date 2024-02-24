@@ -37,6 +37,7 @@ SUM = wsl sha256sum
 IMGMAKE = wsl grub-mkrescue
 CAT = wsl cat
 MV = wsl mv
+MKDIR = wsl mkdir
 SLEEP = wsl sleep
 VER = ver
 else
@@ -50,10 +51,13 @@ SUM = sha256sum
 IMGMAKE = grub-mkrescue
 CAT = cat
 MV = mv
+MKDIR = mkdir
 SLEEP = sleep
 VER = uname -a
 endif
 all: setcolor buildinit buildboot buildstring buildbios buildmm buildvga buildgdt buildserial buildbugcheck buildio buildvbe buildcmos buildfonts link remove
+bin:
+	$(MKDIR) -p bin
 setcolor:
 	@$(COLOR) 81
 	@echo ######### FigaOS build #########
@@ -76,61 +80,61 @@ setcolor:
 	@echo ## IMGMAKE VERSION ##
 	@$(IMGMAKE) --version
 	@$(SLEEP) 5
-buildinit:
+buildinit: bin
 	@echo Compiling INIT for $(value arch)
 	$(CC) $(gccargs) -c src/krnl/init/init.c -o bin/init.o
 	@echo INIT object file created 
-buildstring:
+buildstring: bin
 	@echo Compiling STRING for $(value arch)
 	$(CC) $(gccargs) -c src/krnl/include/libs/sources/string.c -o bin/string.o
 	@echo STRING object file created 
-buildboot:
+buildboot: bin
 	@echo Compiling BOOT for $(value arch)
 	$(ASM) $(nasmargs) src/boot/x86/boot.asm -o bin/boot.o
 	@echo BOOT object file created 
-buildbios:
+buildbios: bin
 	@echo Compiling BIOS for $(value arch)
 	$(CC) $(gccargs) -c src/boot/x86/BIOS/bios.c -o bin/bios.o
 	$(ASM) $(nasmargs) src/boot/x86/BIOS/bios.asm -o bin/biosasm.o
 	@echo BIOS object file created 
-buildvga:
+buildvga: bin
 	@echo Compiling VGA for $(value arch)
 	$(CC) $(gccargs) -c src/drivers/vga/vga.c -o bin/vga.o
 	@echo VGA object file created 
-buildserial:
+buildserial: bin
 	@echo Compiling SERIAL for $(value arch)
 	$(CC) $(gccargs) -c src/krnl/io/serial.c -o bin/serial.o
 	@echo SERIAL object file created 
-buildmm:
+buildmm: bin
 	@echo Compiling MEMORY for $(value arch)
 	$(CC) $(gccargs) -c src/krnl/memory/mm.c -o bin/mm.o
 	@echo MEMORY object file created 
-buildvbe:
+buildvbe: bin
 	@echo Compiling VBE for $(value arch)
 	$(CC) $(gccargs) -c src/drivers/vesa/vesa.c -o bin/vesa.o
 	@echo VBE object file created 
-buildio:
+buildio: bin
 	@echo Compiling IO for $(value arch)
 	$(CC) $(gccargs) -c src/krnl/io/io.c -o bin/io.o
 	@echo IO object file created 
-buildgdt:
+buildgdt: bin
 	@echo Compiling GDT for $(value arch)
 	$(CC) $(gccargs) -c src/krnl/cpu/gdt/gdt.c -o bin/gdt.o
 	@echo GDT object file created 
-buildbugcheck:
+buildbugcheck: bin
 	@echo Compiling BUGCHECK for $(value arch)
 	$(CC) $(gccargs) -c src/krnl/check/bugcheck.c -o bin/bugcheck.o
 	@echo BUGCHECK object file created 
-buildcmos:
+buildcmos: bin
 	@echo Compiling CMOS for $(value arch)
 	$(CC) $(gccargs) -c src/krnl/cpu/CMOS/cmos.c -o bin/cmos.o
 	@echo CMOS object file created 
-buildfonts:
+buildfonts: bin
 	@echo Compiling FONTS for $(value arch)
 	objcopy -O elf32-i386 -B i386 -I binary src/fonts/ter-powerline-v28b.psf bin/fonts.o
 	readelf -sW bin/fonts.o
 	@echo FONTS object file created 
-link:
+link: bin
 	@echo Linking kernel for $(value arch)
 	$(LD) -z max-page-size=0x1000 -T link.ld -m $(linkeroutput) -o bin/$(kernelname) -nostdlib $(value linktargets)
 	@echo Linked  $(kernelname) kernel
@@ -181,7 +185,7 @@ remove:
 	@echo Kernel name: $(kernelname) >> $(LOGFILE)
 	@echo Kernel version: $(Version) >> $(LOGFILE)
 	@echo ########## SUMMARY ########## >> $(LOGFILE)
-mkimage:
+mkimage: bin
 	@echo ISO Boot image creating for $(arch)
 	$(MV) bin/$(kernelname) iso/boot/foskrnl.exe
 	$(IMGMAKE) -o bin/figaOS.iso iso/
