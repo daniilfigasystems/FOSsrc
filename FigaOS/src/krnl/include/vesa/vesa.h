@@ -35,10 +35,11 @@ typedef struct _VideoInformation
 
 /** @brief Init VBE Video graphics buffer
  *  @param VideoFrameBuffer Framebuffer of video graphics
- *  @param VideoPitch Base address
- *  @param VideoHeight of address
- *  @param VideoBPP Access to Global descriptor table
- *  @param VideoType Global descriptor table granularity
+ *  @param VideoPitch Video Pitch
+ *  @param VideoWidth Video Width
+ *  @param VideoHeight Video Height
+ *  @param VideoBPP Video BPP
+ *  @param VideoType Video Type
  *  @return STATUS_SUCCESS if video buffer was initialized successfully STATUS_UNSUCCESSFUL if video buffer was not initialized
 */
 FOSSYSAPI

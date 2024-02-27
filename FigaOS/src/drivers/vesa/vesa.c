@@ -192,6 +192,6 @@ InbvDrawCharacter(
         }
 
         Glyph += BytesPerLine;
-        offs += 24;
+        offs += VBEInformation.FrameBufferPitch; 
     }
 }
