@@ -26,15 +26,17 @@ int KernelEntry(unsigned long magic, MULTIBOOT_INFO *addr)
 {
     LONG MemorySize;
     DriveType DT1, DT2;
-    Serial Com1;
+    VideoFrameBufferAddress vaddr = (ULONG)addr->framebuffer_addr;
+    UINT vpitch = addr->framebuffer_pitch, vwidth = addr->framebuffer_width, vheight = addr->framebuffer_height;
+    UCHAR vbpp = addr->framebuffer_bpp, vtype = addr->framebuffer_type;
 
     GDTInstall();
 
-    InbvInitVideoBuffer(addr->framebuffer_addr, addr->framebuffer_pitch, addr->framebuffer_width, addr->framebuffer_height, addr->framebuffer_bpp, addr->framebuffer_type);
+    InbvInitVideoBuffer(vaddr, vpitch, vwidth, vheight, vbpp, vtype);
 
-    SerialInit(&Com1, COM1);
-    SerialWrite(&Com1, "init: Welcome to os");
-    InbvFillRect(0, 0, addr->framebuffer_width, addr->framebuffer_height, 0x4444);
+    SerialDirectWrite(COM1, "init: Welcome to os");
     InbvLoadPSFFont();
+    InbvDrawCharacter('c', 190, 10, 0x55555555, 0xddd);
+    InbvFillRect(10, 40, 300, 200, 0x55555555);
 }
 
