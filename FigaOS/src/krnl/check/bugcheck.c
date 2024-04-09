@@ -11,6 +11,7 @@
 #include "check/bugcheck.h"
 #include "FOSdef.h"
 #include "check/bugcodes.h"
+#include "vga/vga.h"
 
 FOSKERNELAPI 
 VOID
@@ -22,6 +23,5 @@ KeBugCheck(
     switch(BugCheckCode)
     {
         case FATAL_UNHANDLED_KERNEL_EXPECTION:
-            
     }
 }

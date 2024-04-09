@@ -24,7 +24,7 @@ KeybInitializeKeyboardPS2(
 
     if (inb(0x64) == 0xFC)
     {
-        SerialWrite(COM1, "Failed to test keyboard PS2");
+        SerialDirectWrite(COM1, "Failed to test keyboard PS2");
         status = STATUS_UNSUCCESSFUL;
         return status;
     }
@@ -36,7 +36,8 @@ KeybInitializeKeyboardPS2(
 }
 
 FOSSYSAPI
-VOID KeybTurnOnLED(
+VOID 
+KeybTurnOnLED(
     KeybLedState LEDNum
 )
 {

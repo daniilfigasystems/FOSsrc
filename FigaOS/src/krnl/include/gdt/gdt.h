@@ -15,7 +15,7 @@
 
 struct gdt_entry
 {
-    unsigned short limit_low;
+    /*unsigned short limit_low;
     unsigned short base_low;
     unsigned char limit_middle;
     unsigned char base_middle;
@@ -29,7 +29,13 @@ struct gdt_entry
     unsigned int available;
     unsigned char granularity;
     unsigned char limit_high;
-    unsigned char base_high;
+    unsigned char base_high;*/
+	unsigned short limit_low;
+	unsigned short base_low;
+	unsigned char base_middle;
+	unsigned char access;
+	unsigned char granularity;
+	unsigned char base_high;
 } __attribute__((packed));
 
 struct gdt_pointer

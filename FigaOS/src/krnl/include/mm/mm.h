@@ -1,3 +1,13 @@
+/** @file mm.h
+ *  Copyright (c) 2023 FigaSystems
+ *  Memory Management
+ *  @author Daniil Dunaef
+ *  @date 3-Mar-2024
+ *  @bug No current bugs found
+*/
+
+
+
 #ifndef _MM_
 #define _MM_
 
@@ -41,6 +51,12 @@ MemoryBlock
 FOSKERNELAPI
 MMAllocatePool(
     MemorySize SizeOfMemory
+);
+
+int
+FOSKERNELAPI
+MMGetFreeMem(
+    void
 );
 
 #endif /* !_MM_! */

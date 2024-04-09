@@ -12,7 +12,9 @@
 #include "io/io.h"
 #include "libs/headers/stdarg.h"
 
-unsigned short * vmem = (unsigned short *)VIDEO_ADDRESS;
+char* vmem;
+int row;
+int col;
 
 // void
 // VGA_set_cursor_pos(
@@ -67,43 +69,70 @@ VGAInit(
     void
 )
 {
-	
+	vmem = (char *)VIDEO_ADDRESS;
 	unsigned int i=0;
-	for (int y; y < 80; y++)
+	while (i < (80*25*2)) 
 	{
-		for (int x; x < 25; x++)
-			VGAPutEntry(' ', x, y, 0x00);
+		vmem[i] = ' ';
+		i++;
+		vmem[i] = 0x17;
+		i++;
     }
 }
 
 void
 VGAPutEntry(
 	char entry,
-	int color,
-    int x,
-    int y
+	char color
 )
 {
-	unsigned short *where;
-	unsigned att = color << 8;
-	where = vmem + (x * 80 + y);
-	*where = entry | att;
+	char *vmem = (char *) VIDEO_ADDRESS;
+	unsigned int i=0;
+	i=(row*col*2);
+	if (entry == '\n') 
+	{
+	}
+	else
+	{
+		// vmem[i++] = VGAItemEntry(entry, colorbg, colorfg);
+		// vmem[i] = *entry;
+		// col++;
+		vmem[i] = entry;
+		i++;
+		vmem[i] = color;
+		i++;
+		col++;
+	}
 }
 
 void 
 VGAPrintString(
 	char *str, 
-	int color,
-    int x,
-    int y
+	int color
 )
 {
+	unsigned int i=0;
+	i=(row*col*2);
 
 	while(*str != 0) 
 	{
-        VGAPutEntry(*str, color, x, y);
-        x++;
+		vmem[i]= *str;
+		*str++;
+		i++;
+		vmem[i] = color;
+		i++;
+		col++;
 		// VGAPutEntry(*str, colorbg, colorfg);
 		// str++;
 	}
+}
+
+void
+VGANewLine(
+	void
+)
+{
+	row++;
+	col = 0;
+	col += 80;
 }

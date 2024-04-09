@@ -8,8 +8,11 @@
 
 #include "multiboot.h"
 #include "gdt/gdt.h"
+#include "irq/irq.h"
+#include "BIOS/bios.h"
 #include "idt/idt.h"
 #include "vga/vga.h"
+#include "keyboard/keybps2.h"
 #include "mm/mm.h"
 #include "vesa/vesa.h"
 #include "libs/headers/string.h"
@@ -18,25 +21,44 @@
 #include "io/io.h"
 #include "serial/serial.h"
 #include "check/bugcheck.h"
+#include "misc/kprintf.h"
+#include "multithreading/schedule.h"
 #include "FOSstatus.h"
+#include "regs/regs.h"
+#include "timers/pic/pic.h"
+#include "timers/pit/pit.h"
+#include "BIOS/bios.h"
+#include "BIOS/boot.h"
 
 FOSSTATUS Status;
+
+void lol()
+{
+    kprintf("LOL");
+}
 
 int KernelEntry(unsigned long magic, MULTIBOOT_INFO *addr)
 {
     LONG MemorySize;
     DriveType DT1, DT2;
-    VideoFrameBufferAddress vaddr = (ULONG)addr->framebuffer_addr;
-    UINT vpitch = addr->framebuffer_pitch, vwidth = addr->framebuffer_width, vheight = addr->framebuffer_height;
-    UCHAR vbpp = addr->framebuffer_bpp, vtype = addr->framebuffer_type;
 
+    kprintf("INIT: FigaOS 0.02\n");
     GDTInstall();
-
-    InbvInitVideoBuffer(vaddr, vpitch, vwidth, vheight, vbpp, vtype);
-
-    SerialDirectWrite(COM1, "init: Welcome to os");
-    InbvLoadPSFFont();
-    InbvDrawCharacter('c', 190, 10, 0x55555555, 0xddd);
-    InbvFillRect(10, 40, 300, 200, 0x55555555);
+    IDTInstall();
+    MemorySize = CMOSGetMemorySize();
+    IRQInitialize();
+    MMInitializeMemory(0x1000, MemorySize);
+    KeybInitializeKeyboardPS2();
+    kprintf("Memory %dKB\n", MemorySize);
+    dump();
+    kprintf("EAX: %d EBX: %d EBP: %d\n EIP: %d\n", getregs().eax, getregs().ebx, getregs().ebp, getregs().eip);
+    PICRemap();
+    PICUnmask(100);
+    PITInit(100);
+    sti();
+    kprintf("free mem: %d\n", MMGetFreeMem());
+    wait(10);
+    kprintf("hi");
+    
 }
 

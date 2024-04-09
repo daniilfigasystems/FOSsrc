@@ -11,7 +11,7 @@
 #ifndef _VGA_
 #define _VGA_
 
-#define VIDEO_ADDRESS 0xb8000
+#define VIDEO_ADDRESS 0xB8000
 
 typedef enum {
     COLOR_BLACK,
@@ -40,7 +40,7 @@ typedef enum {
 */
 unsigned 
 short 
-vga_item_entry(
+VGAItemEntry(
 	unsigned char ch, 
 	VGA_COLOR_TYPE fore_color, 
 	VGA_COLOR_TYPE back_color
@@ -51,7 +51,7 @@ vga_item_entry(
  *  @return Nothing
 */
 void
-VGA_init(
+VGAInit(
     void
 );
 
@@ -62,10 +62,11 @@ VGA_init(
  *  @return Nothing
 */
 void
-VGA_putentry(
+VGAPutEntry(
 	char entry,
-	char colorbg,
-    char colorfg
+	int color,
+    int x,
+    int y
 );
 
 /** @brief VGA Put string on xy position with specified color
@@ -75,10 +76,16 @@ VGA_putentry(
  *  @return Nothing
 */
 void 
-VGA_printstring( 
+VGAPrintString( 
 	char *str, 
-	char colobg,
-    char colorfg
+	int color,
+    int x,
+    int y
+);
+
+void
+VGANewLine(
+	void
 );
 
 #endif

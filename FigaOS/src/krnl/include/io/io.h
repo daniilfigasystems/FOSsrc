@@ -6,7 +6,8 @@
  *  @bug No current bugs found
 */
 
-
+#ifndef _IO_
+#define _IO_
 
 static 
 inline 
@@ -88,3 +89,5 @@ inl(
                    : "memory");
     return ret;
 }
+
+#endif /* !_IO_! */

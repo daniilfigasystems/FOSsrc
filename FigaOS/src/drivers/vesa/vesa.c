@@ -1,5 +1,6 @@
 #include "vesa/vesa.h"
 #include "vesa/font.h"
+#include "libs/headers/string.h"
 #include "FOSdef.h"
 #include "FOSstatus.h"
 
@@ -108,7 +109,7 @@ InbvLoadPSFFont(
 
     UniCode = 2;
 
-    while (S > _binary_src_fonts_ter_powerline_v28b_psf_start)
+    while (S < _binary_src_fonts_ter_powerline_v28b_psf_end)
     {
         USHORT UC = (USHORT)((PUCHAR)S[0]);
 
@@ -169,14 +170,16 @@ InbvDrawCharacter(
     Font->headersize +
     (Character > 0 && Character < Font->numglyph ? Character : 0) * Font->bytesperglyph;
 
-    int offs = (CharacterY * Font->height * 24) +
-    (CharacterX * (Font->width + 1) * sizeof(UINT));
+    int offs = VBEInformation.FrameBufferPitch;// (CharacterY * Font->height * (UINT)VBEAddressPointer) +
+    // (CharacterX * (Font->width + 1) * sizeof(UINT));
 
     INT 
     X, 
     Y, 
-    Line, 
-    Mask;
+    Line;
+    UINT
+    Mask,
+    LineBits;
 
     for (Y = 0; Y < Font->height; Y++)
     {
@@ -185,7 +188,8 @@ InbvDrawCharacter(
 
         for (X = 0; X < Font->width - 1; X++)
         {
-            *((PUINT)(VBEAddressPointer + Line)) = *((PUINT)Glyph) & Mask ? ForeGround : BackGround;
+            memcpy(&LineBits, VBEAddressPointer + Line, sizeof(UINT));
+            *((PUINT)(VBEAddressPointer + Line)) = (LineBits & Mask) ? ForeGround : BackGround;
 
             Mask >>= 1;
             Line += sizeof(UINT);

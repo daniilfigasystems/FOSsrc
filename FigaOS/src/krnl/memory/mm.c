@@ -1,7 +1,16 @@
+/** @file mm.c
+ *  Copyright (c) 2023 FigaSystems
+ *  Memory Management
+ *  @author Daniil Dunaef
+ *  @date 3-Mar-2024
+ *  @bug No current bugs found
+*/
+
 
 
 #include "mm/mm.h"
 #include "serial/serial.h"
+#include "misc/kprintf.h"
 #include "FOSdef.h"
 #include "FOSstatus.h"
 
@@ -23,12 +32,14 @@ MMInitializeMemory(
     if (SizeOfMemory > 0)
         MemSize = SizeOfMemory;
     else
-        SerialDirectWrite(COM1, "Memory Error : Memory size must be greater than zero");
+        kprintf("Memory Error : Memory size must be greater than zero\n");
+
+    MemFree = MemSize;
 
     LastAllocatedAddress = KernelEntry;
 
     HeapKernelBlock.HeapStart = LastAllocatedAddress;
-    HeapKernelBlock.HeapEnd = HeapKernelBlock.HeapStart + SizeOfMemory;
+    HeapKernelBlock.HeapEnd = 0x3e0000;
 
     LastAllocated.Address = LastAllocatedAddress;
     
@@ -38,9 +49,9 @@ MMInitializeMemory(
         LastAllocated.IsFree = true;
     
     LastAllocated.Size = HeapKernelBlock.HeapEnd;
-    MemFree += HeapKernelBlock.Size;
-    SerialDirectWrite(COM1, "Last Allocated Address");
-    SerialDirectWrite(COM1, LastAllocated.Address);
+    MemFree -= HeapKernelBlock.Size;
+    kprintf("Last Allocated Address: %d\n", LastAllocated.Address);
+    kprintf("Free Memory: %dKB\n", MemFree);
 }
 
 MemoryBlock
@@ -51,7 +62,7 @@ MMAllocatePool(
 {
     if (SizeOfMemory > 0)
     {
-        if (LastAllocatedAddress < HeapKernelBlock.HeapEnd)
+        if (LastAllocatedAddress < MemSize)
         {
             MemoryBlock MemPool;
             MemPool.Size = SizeOfMemory;
@@ -59,11 +70,21 @@ MMAllocatePool(
             MemPool.IsFree = true;
             LastAllocated = MemPool;
             LastAllocatedAddress = MemPool.Address;
+            MemFree -= MemPool.Size;
             return MemPool;
         }
         else
-            SerialDirectWrite(COM1, "MM: Failed to allocate pool");
+            kprintf("MM: Failed to allocate pool\n");
     }
     else
-        SerialDirectWrite(COM1, "Memory Error : Memory size must be greater than zero");
+        kprintf("Memory Error : Memory size must be greater than zero\n");
+}
+
+int
+FOSKERNELAPI
+MMGetFreeMem(
+    void
+)
+{
+    return MemFree;
 }
