@@ -50,7 +50,7 @@ GDTInstall(
 
     GDTSetGate(0, 0, 0, 0, 0);
 	GDTSetGate(1, 0, 0xFFFFFFFF, 0x9A, 0xCF);
-	GDTSetGate(2, 0, 0xFFFFFFFF, 0x92, 0xCF);
+	GDTSetGate(2, 0, 0xFFFFFFFF, 0x9F, 0xCF);
 
     if (gp.base == 0)
     {
