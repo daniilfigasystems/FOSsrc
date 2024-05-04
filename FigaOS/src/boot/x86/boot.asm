@@ -52,7 +52,7 @@ multibootready:
 mov eax, cr0
 or al, 1
 mov cr0, eax
-# sti
+; sti
 cli
 push ebx
 push eax
@@ -113,7 +113,7 @@ isr_stub:
 	push eax
 	mov eax, ISRHandle
 	call eax
-	pop eax
+	; pop eax
 	pop gs
 	pop fs
 	pop es
@@ -165,11 +165,11 @@ irq_com_stub:
         push eax
         mov eax, IRQHandler
         call eax
-        pop eax
-        pop es
-        pop ds
-        pop fs
+        ; pop eax
         pop gs
+        pop fs
+        pop ds
+        pop es
         popa
         add esp, 8
         iret

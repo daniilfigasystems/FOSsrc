@@ -1,29 +1,29 @@
 arch = i386
 Version = 0.002dev
-qemuargs = -d mmu,pcall,cpu_reset,int -m 8
+qemuargs = -d pcall,cpu_reset,int -m 8 -no-shutdown -no-reboot
 kernelname = foskrnl$(arch).exe
 linktargets = bin/boot.o bin/bootasm.o bin/schedule.o bin/pic.o bin/isr.o bin/pit.o bin/init.o bin/kprintf.o bin/regs.o bin/regsasm.o bin/gdt.o bin/idt.o bin/mm.o bin/vga.o bin/vesa.o bin/bugcheck.o bin/string.o bin/keybps2.o bin/irq.o bin/io.o bin/serial.o bin/cmos.o bin/fonts.o bin/bios.o bin/biosasm.o
 LOGFILE = build.log
 ifeq ($(value arch), i386)
 nasmargs = -f elf32
-gccargs = -m32 -Isrc/krnl/include -g  -W -ffreestanding -Wformat=0
+gccargs = -m32 -Isrc/krnl/include -g  -W -ffreestanding -Wformat=0 -fno-PIC
 linkeroutput = elf_i386
 else ifeq ($(value arch), x64)
 nasmargs = -f elf64
-gccargs = -m64 -Isrc/krnl/include -g -W -ffreestanding -Wformat=0
+gccargs = -m64 -Isrc/krnl/include -g -W -ffreestanding -Wformat=0 -fno-PIC
 linkeroutput = elf_x86_64
 else ifeq ($(value arch),)
 $(info Warning: Architecture not set! Setting to i386)
 override arch = i386
 override kernelname = foskrnl$(arch).exe
 nasmargs = -f elf32
-gccargs = -m32 -Isrc/krnl/include -g -W -ffreestanding -Wformat=0
+gccargs = -m32 -Isrc/krnl/include -g -W -ffreestanding -Wformat=0 -fno-PIC
 linkeroutput = elf_i386
 else
 $(info Warning: Architecture is wrong! Setting to i386)
 override arch = i386
 nasmargs = -f elf32
-gccargs = -m32 -Isrc/krnl/include -g -W -ffreestanding -Wformat=0
+gccargs = -m32 -Isrc/krnl/include -g -W -ffreestanding -Wformat=0 -fno-PIC
 linkeroutput = elf_i386
 endif
 ifeq ($(OS),Windows_NT)
@@ -64,22 +64,22 @@ setcolor:
 	@echo ######### Version $(value Version) #########
 	@echo ######### Using $(OS) #########
 	@echo Preparing Enviroment
-	# @$(SLEEP) 0.25
+	@$(SLEEP) 0.25
 	@echo ####### Architecture $(value arch) #######
 	@$(VER)
-	# @$(SLEEP) 0.25
+	@$(SLEEP) 0.25
 	@echo ## CC VERSION ##
 	@$(CC) --version
-	# @$(SLEEP) 0.25
+	@$(SLEEP) 0.25
 	@echo ## ASM VERSION ##
 	@$(ASM) --version
-	# @$(SLEEP) 0.25
+	@$(SLEEP) 0.25
 	@echo ## LD VERSION ##
 	@$(LD) --version
-	# @$(SLEEP) 0.25
+	@$(SLEEP) 0.25
 	@echo ## IMGMAKE VERSION ##
 	@$(IMGMAKE) --version
-	# @$(SLEEP) 5
+	@$(SLEEP) 5
 buildinit: bin
 	@echo Compiling INIT for $(value arch)
 	$(CC) $(gccargs) -c src/krnl/init/init.c -o bin/init.o
@@ -174,7 +174,7 @@ buildfonts: bin
 	@echo FONTS object file created 
 link: bin
 	@echo Linking kernel for $(value arch)
-	$(LD) -z max-page-size=0x1000 -T link.ld -m $(linkeroutput) -o bin/$(kernelname) -nostdlib $(value linktargets)
+	$(LD) -z max-page-size=0x1000 -no-pie -T link.ld -m $(linkeroutput) -o bin/$(kernelname) -nostdlib $(value linktargets)
 	@echo Linked  $(kernelname) kernel
 	@echo Checking hash of kernel 
 	@$(SUM) bin/$(kernelname)

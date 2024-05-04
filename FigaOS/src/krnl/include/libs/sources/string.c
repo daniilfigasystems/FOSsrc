@@ -18,8 +18,8 @@ memcpy(
 	size_t count
 )
 {
-	const unsigned int *a = src;
-	unsigned int *b = dst;
+	const unsigned char *a = src;
+	unsigned char *b = dst;
 	if (src == 0)
 	{
 		return 0;
@@ -186,7 +186,7 @@ memset(
 	size_t count
 )
 {
-	unsigned long *a = dst;
+	unsigned char *a = dst;
 	if (count == 0)
 	{
 		return 0;

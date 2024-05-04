@@ -21,7 +21,7 @@ FOSKERNELAPI
 VOID
 IDTSetGate(
     unsigned short num,
-    unsigned short base,
+    unsigned long base,
     unsigned short sel,
     unsigned char flags
 );
