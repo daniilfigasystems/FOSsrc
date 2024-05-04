@@ -44,19 +44,19 @@ int KernelEntry(unsigned long magic, MULTIBOOT_INFO *addr)
 
     kprintf("INIT: FigaOS 0.02\n");
     GDTInstall();
-    sti();
+    // sti();
     IDTInstall();
     MemorySize = CMOSGetMemorySize();
     IRQInitialize();
     MMInitializeMemory(0x1000, MemorySize);
     KeybInitializeKeyboardPS2();
     kprintf("Memory %dKB\n", MemorySize);
-    // dump();
-    // kprintf("EAX: %d EBX: %d EBP: %d\n EIP: %d\n", getregs().eax, getregs().ebx, getregs().ebp, getregs().eip);
-    // PICRemap();
-    // PICUnmask(100);
+    dump();
+    kprintf("EAX: %d EBX: %d EBP: %d\n EIP: %d\n", getregs().eax, getregs().ebx, getregs().ebp, getregs().eip);
+    PICRemap();
+    PICUnmask(100);
     PITInit(100);
-    // sti();
+    sti();
     kprintf("free mem: %d\n", MMGetFreeMem());
     wait(10);
     kprintf("hi");

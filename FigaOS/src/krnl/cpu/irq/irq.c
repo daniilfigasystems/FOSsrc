@@ -48,12 +48,12 @@ IRQHandler(
 )
 {
     void (*handler)(struct regs_t* r);
-	handler = IRQRoutines[registers->int_no - 32];
+	handler = IRQRoutines[registers->int_no];
 
 	if (handler)
 		handler(registers);
 
-	if (registers->int_no >= 40)
+	if (registers->int_no >= 8)
 		outb(0xA0, 0x20);
 
 	outb(0x20, 0x20);
