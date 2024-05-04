@@ -55,7 +55,7 @@ int KernelEntry(unsigned long magic, MULTIBOOT_INFO *addr)
     PICRemap();
     PICUnmask(100);
     PITInit(100);
-    sti();
+    //sti();
     kprintf("free mem: %d\n", MMGetFreeMem());
     wait(10);
     kprintf("hi");
