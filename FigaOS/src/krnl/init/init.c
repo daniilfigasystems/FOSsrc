@@ -53,13 +53,13 @@ int KernelEntry(unsigned long magic, MULTIBOOT_INFO *addr)
     kprintf("Memory %dKB\n", MemorySize);
     dump();
     kprintf("EAX: %d EBX: %d EBP: %d\n EIP: %d\n", getregs().eax, getregs().ebx, getregs().ebp, getregs().eip);
-    PICRemap();
-    PICUnmask(100);
-    PITInit(100);
+    // PICRemap();
+    // PICUnmask(100);
+    PITInit(1000);
     sti();
     kprintf("free mem: %d\n", MMGetFreeMem());
-    wait(10);
-    kprintf("hi");
+    // wait(10);
+    //kprintf("hi");
     
 }
 

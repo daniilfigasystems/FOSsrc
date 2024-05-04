@@ -99,7 +99,7 @@ void ISRHandle(struct irqr* r)
 			handler(r);
 		else
 		{
-            kprintf("filt");
+            // kprintf("filt");
 		}
 	}
 }
