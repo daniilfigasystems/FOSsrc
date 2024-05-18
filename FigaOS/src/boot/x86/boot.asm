@@ -58,8 +58,8 @@ push ebx
 push eax
 mov esp, SystemStack
 call KernelEntry
-; jmp $
-hlt
+jmp $
+; hlt
 
 global isr_stub
 

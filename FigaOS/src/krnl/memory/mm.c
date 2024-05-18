@@ -80,6 +80,22 @@ MMAllocatePool(
         kprintf("Memory Error : Memory size must be greater than zero\n");
 }
 
+VOID
+FOSKERNELAPI
+MMFreePool(
+    MemoryBlock Block
+)
+{
+    if (Block.IsFree == 0)
+    {
+        MemFree += Block.Size;
+        Block.Size = 0;
+        Block.IsFree = 1;
+    }
+    else
+        return;
+}
+
 int
 FOSKERNELAPI
 MMGetFreeMem(

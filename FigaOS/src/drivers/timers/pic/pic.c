@@ -25,6 +25,8 @@ void PICRemap(
 	outb(0xA1, 0x01);
 	outb(0x21, 0x0);
 	outb(0xA1, 0x0);
+    outb(PIC1 + 1, 4);
+    outb(PIC2 + 1, 2);
 }
 
 void 

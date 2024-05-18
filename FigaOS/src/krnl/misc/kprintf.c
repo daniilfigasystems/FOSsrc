@@ -1,5 +1,6 @@
 #include "misc/kprintf.h"
 #include "libs/headers/stdarg.h"
+#include "libs/headers/string.h"
 #include "vga/vga.h"
 #include "io/io.h"
 
@@ -176,8 +177,17 @@ kprintf(
 				y++;
 			}
 			if (y == 25) {
-				y = 0;
+				y--;
 				x = 0;
+				size_t sizescr = (25) * 80;
+				memmove(textmemptr, textmemptr + 80, sizescr * 25);
+				
+				for (int k=1; k < 80; k++)
+				{
+					placech(' ', k, 25, 0x07);
+				}
+
+				// memcpy(textmemptr + (80*25), textmemptr + (80), 80);
 			}
 			c++;
 		}

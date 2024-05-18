@@ -41,6 +41,36 @@ extern void isr_15();
 
 static void *ISRRoutines[32] = { NULL };
 
+const char* exceptions[31] = {
+	"Division Error",
+	"Debug",
+	"NMI",
+	"Breakpoint",
+	"Overflow",
+	"Bound Range Exceeded",
+	"Invalid Opcode",
+	"Device not available",
+	"Double fault",
+	"CSO",
+	"Invalid TSS",
+	"Segment not present",
+	"Stack-segment fault",
+	"General protection fault",
+	"Page fault",
+	"Reserved",
+	"X87 floating-point exception",
+	"Alignment check",
+	"Machine check",
+	"SIMD FP exception",
+	"Virtualization exception",
+	"Control protection exception",
+	"Reserved",
+	"Hypervisor injection exception",
+	"VMM communtication exception",
+	"Security exception",
+	"Reserved"
+};
+
 void ISRInstall(int isrs, void* handler)
 {
 	ISRRoutines[isrs] = handler;
@@ -99,7 +129,7 @@ void ISRHandle(struct irqr* r)
 			handler(r);
 		else
 		{
-            // kprintf("filt");
+            kprintf("exception %d:%s\n", r->int_no, exceptions[r->int_no]);
 		}
 	}
 }

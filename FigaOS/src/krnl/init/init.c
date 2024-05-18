@@ -49,17 +49,26 @@ int KernelEntry(unsigned long magic, MULTIBOOT_INFO *addr)
     MemorySize = CMOSGetMemorySize();
     IRQInitialize();
     MMInitializeMemory(0x1000, MemorySize);
+    sti();
+    PICRemap();
+    PICUnmask(100);
+    PITInit(100);
     KeybInitializeKeyboardPS2();
     kprintf("Memory %dKB\n", MemorySize);
     dump();
     kprintf("EAX: %d EBX: %d EBP: %d\n EIP: %d\n", getregs().eax, getregs().ebx, getregs().ebp, getregs().eip);
-    // PICRemap();
-    // PICUnmask(100);
-    PITInit(1000);
-    sti();
     kprintf("free mem: %d\n", MMGetFreeMem());
-    // wait(10);
-    //kprintf("hi");
-    
+    wait(100);
+    kprintf("hi\n");
+    outb(0x43, 0xb6);
+    outb(0x42, (unsigned char) (1193180 / 150));
+    outb(0x42, (unsigned char) ((1193180 / 150) >> 8));
+    unsigned char tmp;
+    tmp = inb(0x61);
+    if (tmp != (tmp | 3))
+        outb(0x61, tmp | 3);
+    wait(100);
+    tmp = inb(0x61) & 0xFC;
+    outb(0x61, tmp);
 }
 
