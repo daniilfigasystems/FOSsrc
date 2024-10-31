@@ -21,6 +21,6 @@ typedef struct {
     unsigned int width;         /* width in pixels */
 } PSF_font;
 
-extern char _binary_src_fonts_ter_powerline_v28b_psf_start;
-extern char _binary_src_fonts_ter_powerline_v28b_psf_end;
-extern char _binary_src_fonts_ter_powerline_v28b_psf_size;
+// extern char _binary_src_fonts_ter_powerline_v28b_psf_start;
+// extern char _binary_src_fonts_ter_powerline_v28b_psf_end;
+// extern char _binary_src_fonts_ter_powerline_v28b_psf_size;

@@ -11,15 +11,19 @@
 #include "mm/mm.h"
 #include "serial/serial.h"
 #include "misc/kprintf.h"
+#include <libs/headers/string.h>
 #include "FOSdef.h"
 #include "FOSstatus.h"
 
 MemorySize MemSize = 0;
 HeapBlock HeapKernelBlock;
+HeapBlock PageHeap;
+unsigned char *PageHeapDesc = 0;
 MemorySize MemFree = 0;
+MemorySize MemUsed = 0;
 
-MemoryBlock LastAllocated;
 MemoryAddress LastAllocatedAddress = 0;
+MemorySize LastAllocatedSize = 0;
 
 
 VOID
@@ -36,25 +40,21 @@ MMInitializeMemory(
 
     MemFree = MemSize;
 
-    LastAllocatedAddress = KernelEntry;
+    LastAllocatedAddress = KernelEntry + 0x1000;
+
+    PageHeap.HeapEnd = 0x400000;
+    PageHeap.HeapStart = PageHeap.HeapEnd - (32 * 4096);
 
     HeapKernelBlock.HeapStart = LastAllocatedAddress;
-    HeapKernelBlock.HeapEnd = 0x3e0000;
-
-    LastAllocated.Address = LastAllocatedAddress;
+    HeapKernelBlock.HeapEnd = PageHeap.HeapStart;
     
-    if (LastAllocated.Size > 0)
-        LastAllocated.IsFree = false;
-    else
-        LastAllocated.IsFree = true;
-    
-    LastAllocated.Size = HeapKernelBlock.HeapEnd;
+    LastAllocatedSize = HeapKernelBlock.HeapEnd - HeapKernelBlock.HeapStart;
     MemFree -= HeapKernelBlock.Size;
-    kprintf("Last Allocated Address: %d\n", LastAllocated.Address);
-    kprintf("Free Memory: %dKB\n", MemFree);
+    PageHeapDesc = (unsigned char*) MMAllocatePool(32);
 }
 
-MemoryBlock
+CHAR
+*
 FOSKERNELAPI
 MMAllocatePool(
     MemorySize SizeOfMemory
@@ -64,14 +64,55 @@ MMAllocatePool(
     {
         if (LastAllocatedAddress < MemSize)
         {
-            MemoryBlock MemPool;
-            MemPool.Size = SizeOfMemory;
-            MemPool.Address = LastAllocatedAddress + SizeOfMemory;
-            MemPool.IsFree = true;
-            LastAllocated = MemPool;
-            LastAllocatedAddress = MemPool.Address;
-            MemFree -= MemPool.Size;
-            return MemPool;
+            PUCHAR Memory = (PUCHAR)HeapKernelBlock.HeapStart;
+
+            while ((PUCHAR)Memory < LastAllocatedAddress)
+            {
+                MemoryBlock *MBlock = (MemoryBlock*)Memory;
+                
+                if (!MBlock->Size)
+                    goto Nalloc;
+                
+                if (!MBlock->IsFree)
+                {
+                    Memory += MBlock->Size;
+                    Memory += sizeof(MemoryBlock);
+                    Memory += 4;
+                    continue;
+                }
+
+                if (MBlock->Size >= SizeOfMemory)
+                {
+                    MBlock->IsFree = 0;
+
+                    memset(Memory + sizeof(MemoryBlock), 0, SizeOfMemory);
+                    MemUsed += SizeOfMemory + sizeof(MemoryBlock);
+                    return (PUCHAR)(Memory + sizeof(MemoryBlock));
+                }
+
+                Memory += MBlock->Size;
+                Memory += sizeof(MemoryBlock);
+                Memory += 4;
+            }
+
+	        Nalloc:;
+	        if(LastAllocatedAddress+SizeOfMemory+sizeof(MemoryBlock) >= HeapKernelBlock.HeapEnd)
+	        {
+                kprintf("Cannot alloc: Out of memory!\n");
+	        }
+	        MemoryBlock *MBlock = (MemoryBlock*) LastAllocatedAddress;
+	        MBlock->IsFree = 0;
+	        MBlock->Size = SizeOfMemory;
+
+	        LastAllocatedAddress += SizeOfMemory;
+	        LastAllocatedAddress += sizeof(MemoryBlock);
+	        LastAllocatedAddress += 4;
+
+            kprintf("Allocated %d bytes from 0x%x to 0x%x\n", SizeOfMemory, (UINT) MBlock + sizeof(MemoryBlock), LastAllocatedAddress);
+
+	        MemUsed += SizeOfMemory + 4 + sizeof(MemoryBlock);
+	        memset((PUCHAR)((UINT)MBlock + sizeof(MemoryBlock)), 0, SizeOfMemory);
+	        return (PUCHAR)((UINT)MBlock + sizeof(MemoryBlock));
         }
         else
             kprintf("MM: Failed to allocate pool\n");
@@ -83,17 +124,12 @@ MMAllocatePool(
 VOID
 FOSKERNELAPI
 MMFreePool(
-    MemoryBlock Block
+    void *Memory
 )
 {
-    if (Block.IsFree == 0)
-    {
-        MemFree += Block.Size;
-        Block.Size = 0;
-        Block.IsFree = 1;
-    }
-    else
-        return;
+    MemoryBlock *MBlock = (Memory - sizeof(MemoryBlock));
+    MemUsed -= MBlock->Size + sizeof(MemoryBlock);
+    MBlock->IsFree = 1;
 }
 
 int

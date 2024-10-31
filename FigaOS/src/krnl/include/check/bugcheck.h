@@ -15,13 +15,15 @@
 #include "bugcodes.h"
 
 /** @brief Displaying death screen and halts system
- *  @param BugCheckCode Code of error
+ *  @param Code Code of error
+ *  @param Message Error description
  *  @return Nothing
 */
-FOSKERNELAPI
+FOSKERNELAPI 
 VOID
-KeBugCheck(
-    IN ULONG BugCheckCode
+BCPanic(
+    IN ULONG Code,
+    IN PCHAR Message
 );
 
 #endif /* !_BUGCHECK_! */

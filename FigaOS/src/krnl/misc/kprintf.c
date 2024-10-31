@@ -107,16 +107,27 @@ vasprintf(char * buf, const char *fmt, __builtin_va_list args) {
 }
 
 unsigned short * textmemptr = (unsigned short *)0xB8000;
-void placech(unsigned char c, int x, int y, int attr) {
-	unsigned short *where;
-	unsigned att = attr << 8;
-	where = textmemptr + (y * 80 + x);
-	*where = c | att;
-}
+// void placech(unsigned char c, int x, int y, int attr) {
+// 	unsigned short *where;
+// 	unsigned att = attr << 8;
+// 	where = textmemptr + (y * 80 + x);
+// 	*where = c | att;
+// }
 
 int x = 0, y = 0;
+char color;
 int _not_ready = 1;
 int _off = 0;
+
+void
+gotoxy(
+	int X,
+	int Y
+)
+{
+	x = X;
+	y = Y;
+}
 
 
 int
@@ -124,6 +135,7 @@ kprintf(
 		const char *fmt,
 		...
 	   ) {
+	color = VGAGetColor();
 	char buf[1024] = {-1};
 	__builtin_va_list args;
 	va_start(args, fmt);
@@ -145,8 +157,8 @@ kprintf(
 			outb(0x3d4, 15);
 			outb(0x3d5, temp);
 			for (int y = 0; y < 80; ++y) {
-				for (int x = 0; x < 24; ++x) {
-					placech(' ', x, y, 0x00);
+				for (int x = 0; x < 25; ++x) {
+					VGAPutEntry(' ', x, y, color);
 				}
 			}
 			_not_ready = 0;
@@ -169,14 +181,14 @@ kprintf(
 				y += 1;
 				x = 0;
 			} else {
-                placech(*c, x, y, 0x07);
+                VGAPutEntry(*c, x, y, color);
 				x++;
 			}
 			if (x == 80) {
 				x = 0;
 				y++;
 			}
-			if (y == 25) {
+			if (y > 25) {
 				y--;
 				x = 0;
 				size_t sizescr = (25) * 80;
@@ -184,7 +196,7 @@ kprintf(
 				
 				for (int k=1; k < 80; k++)
 				{
-					placech(' ', k, 25, 0x07);
+					VGAPutEntry(' ', k, 25, color);
 				}
 
 				// memcpy(textmemptr + (80*25), textmemptr + (80), 80);

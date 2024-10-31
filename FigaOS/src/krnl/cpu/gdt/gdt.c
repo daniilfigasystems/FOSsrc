@@ -70,8 +70,8 @@ GDTInstall(
 
     if (gp.base == 0)
     {
-        KeBugCheck(FATAL_UNHANDLED_KERNEL_EXPECTION);
-
+        BCPanic(FATAL_UNHANDLED_KERNEL_EXPECTION, "GDT Failure");
+ 
     }
     GDTi();
 }

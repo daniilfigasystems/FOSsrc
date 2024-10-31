@@ -22,3 +22,21 @@ VOID
 KeybTurnOnLED(
     KeybLedState LEDNum
 );
+
+FOSSYSAPI
+UCHAR
+KeybGetKeyChar(
+    void
+);
+
+FOSSYSAPI
+INT
+KeybGetKeyCode(
+    void
+);
+
+FOSSYSAPI
+VOID
+KeybResetCPU(
+    void
+);

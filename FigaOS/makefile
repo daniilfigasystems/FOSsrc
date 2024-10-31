@@ -1,12 +1,12 @@
 arch = i386
 Version = 0.002dev
-qemuargs = -d pcall,cpu_reset,int -m 8 -no-shutdown -no-reboot
+qemuargs =  -m 64 -d int,cpu_reset,unimp -no-shutdown -no-reboot -S -s
 kernelname = foskrnl$(arch).exe
-linktargets = bin/boot.o bin/bootasm.o bin/schedule.o bin/pic.o bin/isr.o bin/pit.o bin/init.o bin/kprintf.o bin/regs.o bin/regsasm.o bin/gdt.o bin/idt.o bin/mm.o bin/vga.o bin/vesa.o bin/bugcheck.o bin/string.o bin/keybps2.o bin/irq.o bin/io.o bin/serial.o bin/cmos.o bin/fonts.o bin/bios.o bin/biosasm.o
+linktargets = bin/boot.o bin/bootasm.o bin/paging.o bin/pagingasm.o bin/schedule.o bin/debug.o bin/pic.o bin/dma.o bin/v86.o bin/v86asm.o bin/isr.o bin/pit.o bin/init.o bin/kprintf.o bin/regs.o bin/regsasm.o bin/gdt.o bin/idt.o bin/mm.o bin/vga.o bin/vesa.o bin/bugcheck.o bin/string.o bin/keybps2.o bin/irq.o bin/io.o bin/serial.o bin/cmos.o bin/bios.o bin/biosasm.o bin/fdc.o
 LOGFILE = build.log
 ifeq ($(value arch), i386)
 nasmargs = -f elf32
-gccargs = -m32 -Isrc/krnl/include -g  -W -ffreestanding -Wformat=0 -fno-PIC
+gccargs = -m32 -Isrc/krnl/include -g  -W -ffreestanding -Wformat=0 -fno-PIC -nostdlib
 linkeroutput = elf_i386
 else ifeq ($(value arch), x64)
 nasmargs = -f elf64
@@ -55,7 +55,7 @@ MKDIR = mkdir
 SLEEP = sleep
 VER = uname -a
 endif
-all: setcolor buildinit buildboot buildstring buildpic buildpit buildschedule buildregs buildbios buildkprintf buildmm buildirq buildvga buildkeybps2 buildgdt buildisr buildidt buildserial buildbugcheck buildio buildvbe buildcmos buildfonts link remove
+all: setcolor buildinit buildboot buildstring builddebug buildpic builddma buildv86 buildpit buildschedule buildregs buildbios buildkprintf buildmm buildirq buildvga buildkeybps2 buildgdt buildisr buildidt buildserial buildbugcheck buildio buildvbe buildcmos buildfdc link remove
 bin:
 	$(MKDIR) -p bin
 setcolor:
@@ -79,7 +79,6 @@ setcolor:
 	@$(SLEEP) 0.25
 	@echo ## IMGMAKE VERSION ##
 	@$(IMGMAKE) --version
-	@$(SLEEP) 5
 buildinit: bin
 	@echo Compiling INIT for $(value arch)
 	$(CC) $(gccargs) -c src/krnl/init/init.c -o bin/init.o
@@ -114,11 +113,24 @@ buildvga: bin
 buildkeybps2: bin
 	@echo Compiling KEYBOARD PS2 for $(value arch)
 	$(CC) $(gccargs) -c src/drivers/keyboard/keybps2.c -o bin/keybps2.o
-	@echo KEYBOARD PS2 object file created 
+	@echo KEYBOARD PS2 object file created
+builddma: bin
+	@echo Compiling DMA for $(value arch)
+	$(CC) $(gccargs) -c src/drivers/dma/dma.c -o bin/dma.o
+	@echo DMA object file created 
+buildv86: bin
+	@echo Compiling V86 for $(value arch)
+	$(CC) $(gccargs) -c src/krnl/cpu/v86/v86.c -o bin/v86.o
+	$(ASM) $(nasmargs) src/krnl/cpu/v86/v86.asm -o bin/v86asm.o
+	@echo V86 object file created 
 buildserial: bin
 	@echo Compiling SERIAL for $(value arch)
 	$(CC) $(gccargs) -c src/krnl/io/serial.c -o bin/serial.o
 	@echo SERIAL object file created 
+builddebug: bin
+	@echo Compiling DEBUG for $(value arch)
+	$(CC) $(gccargs) -c src/krnl/debug/debug.c -o bin/debug.o
+	@echo DEBUG object file created 
 buildpic: bin
 	@echo Compiling PIC for $(value arch)
 	$(CC) $(gccargs) -c src/drivers/timers/pic/pic.c -o bin/pic.o
@@ -130,6 +142,8 @@ buildpit: bin
 buildmm: bin
 	@echo Compiling MEMORY for $(value arch)
 	$(CC) $(gccargs) -c src/krnl/memory/mm.c -o bin/mm.o
+	$(ASM) $(nasmargs) src/krnl/memory/paging.asm -o bin/pagingasm.o
+	$(CC) $(gccargs) -c src/krnl/memory/paging.c -o bin/paging.o
 	@echo MEMORY object file created 
 buildvbe: bin
 	@echo Compiling VBE for $(value arch)
@@ -166,7 +180,11 @@ buildbugcheck: bin
 buildcmos: bin
 	@echo Compiling CMOS for $(value arch)
 	$(CC) $(gccargs) -c src/krnl/cpu/CMOS/cmos.c -o bin/cmos.o
-	@echo CMOS object file created 
+	@echo CMOS object file created
+buildfdc: bin
+	@echo Compiling FDC for $(value arch)
+	$(CC) $(gccargs) -c src/drivers/fdc/fdc.c -o bin/fdc.o
+	@echo FDC object file created 
 buildfonts: bin
 	@echo Compiling FONTS for $(value arch)
 	objcopy -O elf32-i386 -B i386 -I binary src/fonts/ter-powerline-v28b.psf bin/fonts.o
@@ -185,7 +203,11 @@ link: bin
 test:
 	@$(SLEEP) 5
 	@echo Starting $(kernelname) with QEMU arguments: $(value qemuargs)
-	$(value qemu) -hda bin/figaOS.iso $(value qemuargs)
+	$(value qemu) -hda bin/figaOS.iso -fda bin/test.img $(value qemuargs)
+	@echo QEMU Shutdown: $(kernelname), bin/figaOS.iso
+testfast:
+	@echo Starting $(kernelname) with QEMU arguments: -cpu 486 -m 4 -accel tcg,thread=multi -fda bin/BlankFloppy.img
+	$(value qemu) -hda bin/figaOS.iso -fda bin/test.img -cpu 486 -m 4 -accel tcg,thread=multi -fdb bin/BlankFloppy.img
 	@echo QEMU Shutdown: $(kernelname), bin/figaOS.iso
 remove:
 	@echo Cleaning up

@@ -211,7 +211,7 @@ strlen(
 	const char *str
 ) 
 {
-	int i;
+	int i = 0;
 	while (str[i] != (char)0 || str[i] != '\0') 
 	{ 
 		++i;

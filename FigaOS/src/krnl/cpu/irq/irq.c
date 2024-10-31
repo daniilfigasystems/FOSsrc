@@ -18,6 +18,8 @@
 #include "io/io.h"
 #include "timers/pic/pic.h"
 
+int IRQLast;
+
 extern VOID _irq0();
 extern VOID _irq1();
 extern VOID _irq2();
@@ -42,13 +44,25 @@ void* IRQRoutines[16] =
 };
 
 FOSKERNELAPI
+INT
+IRQWaitForInterrupt(
+    INT InterruptNumber
+)
+{
+    while(IRQLast != InterruptNumber)
+        ;;
+    return IRQLast;
+}
+
+FOSKERNELAPI
 VOID
 IRQHandler(
     struct irqr* registers
 )
 {
-    void (*handler)(struct regs_t* r);
+    void (*handler)(struct irqr* r);
 	handler = IRQRoutines[registers->int_no];
+    IRQLast = registers->int_no;
 
 	if (handler)
 		handler(registers);
@@ -57,16 +71,6 @@ IRQHandler(
 		outb(0xA0, 0x20);
 
 	outb(0x20, 0x20);
-}
-
-FOSKERNELAPI
-VOID
-IRQInitialize(
-    void
-)
-{
-    PICRemap();
-    IRQGatesInstall();
 }
 
 FOSKERNELAPI
@@ -91,7 +95,16 @@ IRQGatesInstall(
     IDTSetGate(45, (unsigned)_irq13, 0x08, 0x8E);
     IDTSetGate(46, (unsigned)_irq14, 0x08, 0x8E);
     IDTSetGate(47, (unsigned)_irq15, 0x08, 0x8E);
-    kprintf("IRQ: Gates Installed\n");
+}
+
+FOSKERNELAPI
+VOID
+IRQInitialize(
+    void
+)
+{
+    PICRemap();
+    IRQGatesInstall();
 }
 
 FOSKERNELAPI

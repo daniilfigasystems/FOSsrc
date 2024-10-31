@@ -10,3 +10,7 @@ void PITInit(
 void wait(
     int wait_ticks
 );
+
+unsigned int PITGetTimer(
+	void
+);

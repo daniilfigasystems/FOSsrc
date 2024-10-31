@@ -12,6 +12,12 @@ struct irqr {
 } __attribute__((packed));
 
 FOSKERNELAPI
+INT
+IRQWaitForInterrupt(
+    INT InterruptNumber
+);
+
+FOSKERNELAPI
 VOID
 IRQInitialize(
     void

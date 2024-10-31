@@ -13,6 +13,9 @@ struct _regs
         ecx,
         eax,
         eip;
+    int int_no;
+    int err_code;
+    int eflags;
 } regs;
 
 void __dump_dummy__(regs registers);

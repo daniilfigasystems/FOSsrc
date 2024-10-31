@@ -78,13 +78,28 @@ VGAPutEntry(
 void 
 VGAPrintString( 
 	char *str, 
-	int color,
     int x,
-    int y
+    int y,
+    int color
 );
 
 void
 VGANewLine(
+	void
+);
+
+void
+VGASetColor(
+	int color
+);
+
+int
+VGAGetColor(
+	void
+);
+
+void
+VGASetVideoMode(
 	void
 );
 

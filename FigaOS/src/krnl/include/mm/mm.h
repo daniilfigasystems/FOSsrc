@@ -47,7 +47,8 @@ MMInitializeMemory(
     MemorySize SizeOfMemory
 );
 
-MemoryBlock
+CHAR
+*
 FOSKERNELAPI
 MMAllocatePool(
     MemorySize SizeOfMemory

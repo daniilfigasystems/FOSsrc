@@ -12,6 +12,12 @@ vasprintf(
     char * buf, const char *fmt, __builtin_va_list args
 );
 
+void
+gotoxy(
+	int X,
+	int Y
+);
+
 int
 kprintf(
 	const char *fmt,

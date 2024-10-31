@@ -42,3 +42,21 @@ void wait(
 
 	while (ticks < eticks);
 }
+
+unsigned int PITGetTimer(
+	void
+)
+{
+	unsigned int time = 0;
+
+	asm("cli");
+
+	outb(0x43, 0x0);
+
+	time = inb(0x40);
+	time |= inb(0x40) << 8;
+
+	asm("sti");
+
+	return time;
+}

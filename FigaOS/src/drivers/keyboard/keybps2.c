@@ -55,6 +55,9 @@ unsigned char kbdus[128] =
     0,	/* All other keys are undefined */
 };
 
+unsigned char lastpressed = 0xff;
+int lastpressedkeycode = 0xff;
+
 FOSSYSAPI
 VOID
 KeybHandler(
@@ -66,9 +69,23 @@ KeybHandler(
 
     scan = inb(0x60);
     i = inb(0x61);
-    kprintf("key pressed/released %c\n", kbdus[scan]);
-    outb(0x61, i|0x80);
+
+    //kprintf("key pressed/released %c\n", kbdus[scan]);
+
+    if ((scan & 0x80) == 0x80)
+    {
+      lastpressed = 0x80;
+      lastpressedkeycode = 0x80;
+    }
+    else
+    {
+      lastpressed = kbdus[scan];
+      lastpressedkeycode = scan;
+    }
+
+    outb(0x61, i | 0x80);
     outb(0x61, i);
+
     PICSendEOI(1);
 }
 
@@ -107,4 +124,47 @@ KeybTurnOnLED(
 {
     outb(0x60, 0xED);
     outb(0x60, LEDNum);
+}
+
+FOSSYSAPI
+UCHAR
+KeybGetKeyChar(
+    void
+)
+{
+    unsigned char lastpressc = lastpressed;
+
+    lastpressed = 0xff;
+    lastpressedkeycode = 0xff;
+
+    return lastpressc;
+}
+
+FOSSYSAPI
+INT
+KeybGetKeyCode(
+    void
+)
+{
+    int lastpressk = lastpressedkeycode;
+
+    lastpressed = 0xff;
+    lastpressedkeycode = 0xff;
+
+    return lastpressk;
+}
+
+FOSSYSAPI
+VOID
+KeybResetCPU(
+    void
+)
+{
+    char val = 0x02;
+
+    while (val & 0x02)
+      val = inb(0x64);
+    
+    outb(0x64, 0xfe);
+    asm("hlt");
 }

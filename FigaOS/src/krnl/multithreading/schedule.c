@@ -5,7 +5,8 @@ Thread threads[1024]; // max 1024 threads
 
 int current_tid = 0;
 
-void MTCreateThread(void *address)
+void 
+MTCreateThread(void *address)
 {
     if (current_tid >= 1024)
         return;
@@ -15,7 +16,8 @@ void MTCreateThread(void *address)
     threads[current_tid].registers.eip = address;
 }
 
-void MTSwitchTo(int tid)
+void 
+MTSwitchTo(int tid)
 {
     if (threads[tid].islocked == true)
         return;
@@ -30,6 +32,6 @@ void MTSwitchTo(int tid)
     current_tid = tid;
 
     void *address = threads[tid].registers.eip;
-    asm volatile("sti");
-    goto *address;
+    // asm volatile("sti");
+    asm volatile ("call %0" :: "r" (&address));
 }
