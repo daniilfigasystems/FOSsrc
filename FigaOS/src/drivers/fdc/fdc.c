@@ -439,7 +439,7 @@ FDCRecalibrate(
 
     FDCMotorOFF(DriveType);
 
-    kprintf("FDC: Recalibrated\n");
+    // kprintf("FDC: Recalibrated\n");
 }
 
 FOSKERNELAPI
@@ -484,7 +484,7 @@ FDCReset(
 
     outb(FDC_DIGITAL_OUT, FDC_DOR_MOT_A_OFF);
 
-    kprintf("FDC: Turned off controller\n");
+    // kprintf("FDC: Turned off controller\n");
 
     FDCRecalibrate(DriveType);
 
@@ -571,7 +571,7 @@ FDCInitDMA(
 
     outb(0x0a, 0x02);
 
-    kprintf("FDC: DMA initialized\n");
+    // kprintf("FDC: DMA initialized\n");
 }
 
 FOSKERNELAPI
@@ -583,5 +583,5 @@ FDCInit(
     IRQInstall(6, FDCHandler);
     FDCReset(DriveType);
 
-    kprintf("FDC: Initialized\n");
+    // kprintf("FDC: Initialized\n");
 }

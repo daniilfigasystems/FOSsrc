@@ -33,5 +33,5 @@ MTSwitchTo(int tid)
 
     void *address = threads[tid].registers.eip;
     // asm volatile("sti");
-    asm volatile ("call %0" :: "r" (&address));
+    asm volatile ("jmp %0" :: "r" (&address));
 }

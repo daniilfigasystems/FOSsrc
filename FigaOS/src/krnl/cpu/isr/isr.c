@@ -131,7 +131,7 @@ void ISRHandler(struct irqr* r)
 			handler(r);
 		else
 		{
-            kprintf("exception %d:%s\n", r->int_no, exceptions[r->int_no]);
+            kprintf("\nexception %d:%s\n", r->int_no, exceptions[r->int_no]);
 			BCPanic(ISR_EXCEPTION, exceptions[r->int_no]);
 		}
 	}

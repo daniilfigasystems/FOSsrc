@@ -50,7 +50,7 @@ MMInitializeMemory(
     
     LastAllocatedSize = HeapKernelBlock.HeapEnd - HeapKernelBlock.HeapStart;
     MemFree -= HeapKernelBlock.Size;
-    PageHeapDesc = (unsigned char*) MMAllocatePool(32);
+    PageHeapDesc = (PUCHAR)MMAllocatePool(32);
 }
 
 CHAR
@@ -108,7 +108,7 @@ MMAllocatePool(
 	        LastAllocatedAddress += sizeof(MemoryBlock);
 	        LastAllocatedAddress += 4;
 
-            kprintf("Allocated %d bytes from 0x%x to 0x%x\n", SizeOfMemory, (UINT) MBlock + sizeof(MemoryBlock), LastAllocatedAddress);
+            // kprintf("Allocated %d bytes from 0x%x to 0x%x\n", SizeOfMemory, (UINT) MBlock + sizeof(MemoryBlock), LastAllocatedAddress);
 
 	        MemUsed += SizeOfMemory + 4 + sizeof(MemoryBlock);
 	        memset((PUCHAR)((UINT)MBlock + sizeof(MemoryBlock)), 0, SizeOfMemory);
@@ -130,6 +130,17 @@ MMFreePool(
     MemoryBlock *MBlock = (Memory - sizeof(MemoryBlock));
     MemUsed -= MBlock->Size + sizeof(MemoryBlock);
     MBlock->IsFree = 1;
+}
+
+VOID
+FOSKERNELAPI
+MMReallocatePool
+(
+    void *Memory,
+    MemorySize SizeOfMemory
+)
+{
+    
 }
 
 int

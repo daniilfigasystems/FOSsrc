@@ -40,12 +40,12 @@ RNDRandom(
     {
         case RDRAND:
             asm("rdrand %0" : "=r"(num));
-            break;
+        break;
         case RDSEED:
             asm("rdseed %0" : "=r"(num));
-            break;
+        break;
         case SRAND:
             PIT
-            break;
+        break;
     }
 }

@@ -1,3 +1,12 @@
+; File: v86.asm
+; Copyright (c) 2024 Figasystems
+; Virtual 86 mode
+; Author: Daniil Dunaef
+; Date: 21-Nov-2024
+; Bugs: No bugs found
+
+
+
 extern V86GetRegs
 global V86Enter
 

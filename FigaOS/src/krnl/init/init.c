@@ -26,6 +26,7 @@
 #include "isr/isr.h"
 #include "check/bugcheck.h"
 #include "check/bugcodes.h"
+#include "sys/syscall.h"
 #include "misc/kprintf.h"
 #include "multithreading/schedule.h"
 #include "FOSstatus.h"
@@ -51,42 +52,41 @@ int KernelEntry(unsigned long magic, MULTIBOOT_INFO *addr)
     IDTInstall();
     PGInitializePaging();
     MemorySize = CMOSGetMemorySize();
-    kprintf("%d KB Memory\n", MemorySize);
+    MMInitializeMemory(0x100000, MemorySize*1024);
+    kprintf("%d KB Memory   %d KB Free\n", MemorySize, MMGetFreeMem()/1024);
     if (MemorySize < 8096)
         kprintf("Warning: Using less than 8 MB may be laggy\n");
-    if (MemorySize < 3072)
-        BCPanic(FATAL_UNHANDLED_KERNEL_EXPECTION, "Not enough memory. System is deadlocked on memory");
-    IRQInitialize();
-    ISRInitialize();
-    MMInitializeMemory(0x100000, MemorySize*1024);
-    sti();
-    PICRemap();
-    PICUnmask(100);
-    PITInit(250);
-    dump();
-    wait(1);
+    if (MemorySize < 1760)
+        BCPanic(FATAL_UNHANDLED_KERNEL_EXPECTION, "Not enough memory\n");
     for (int i = 0; i < 80; i++)
         kprintf("=");
-    for (int i = 0; i < 64; i++)
-    {
-        wait(3);
-        kprintf(".");
-    }
-    kprintf("\n");
+    dump();
+    IRQInitialize();
+    kprintf(".");
+    ISRInitialize();
+    kprintf(".");
+    sti();
+    PICRemap();
+    kprintf(".");
+    PICUnmask(100);
+    kprintf(".");
+    PITInit(250);
+    kprintf(".");
     KeybInitializeKeyboardPS2();
+    kprintf(".");
     FDCInit(0);
-    kprintf("FigaOS Version 0.02DEV\n");
-    for (int i = 0; i < 70; i++)
-    {
-        kprintf(".");
-        FDCSeek(0, i, 1);
-        FDCSeekTrackSide(i, 1);
-        // FDCDoTrack(0, i, FDC_Dir_Read);
-    }
-    VGAInit();
-    wait(1000);
-    VGASetVideoMode();
-    KeybResetCPU();
+    kprintf(".");
+    SCInit();
+    kprintf(".");
+    const char* str = "hii";
+    regs registers;
+    registers.eax = SYSWRITE;
+    registers.edi = 1;
+    registers.ecx = strlen(str);
+    registers.esi = *str;
+    // SCSyscall(&registers);
+    SCSyscall(&registers);
+    kprintf(".");
     // BCPanic(FATAL_UNHANDLED_KERNEL_EXPECTION, "FDC: Failed to configure driver work propertly sigma kriper\n");
 }
 

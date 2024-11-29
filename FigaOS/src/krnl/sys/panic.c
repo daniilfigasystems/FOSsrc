@@ -47,10 +47,10 @@ BCPanic(
     kprintf("EFLAGS 0x%x\n", getregs().eflags);
     // kprintf("GDT: 0x%x IDT: 0x%x", GDT)
     kprintf("Memory free: %dB\n", MMGetFreeMem());
-    kprintf("Memory: %dK\n", CMOSGetMemorySize());
+    kprintf("Memory: %dB\n", CMOSGetMemorySize()*1024);
     kprintf("Timer: %d\n", PITGetTimer());
-    kprintf("System Halted\n");
     DBGStackTrace(16);
+    kprintf("System Halted\n");
 
     for (int i = 0; i < 16; i++)
         IRQUninstall(i);

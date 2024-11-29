@@ -2,7 +2,7 @@ arch = i386
 Version = 0.002dev
 qemuargs =  -m 64 -d int,cpu_reset,unimp -no-shutdown -no-reboot -S -s
 kernelname = foskrnl$(arch).exe
-linktargets = bin/boot.o bin/bootasm.o bin/paging.o bin/pagingasm.o bin/schedule.o bin/debug.o bin/pic.o bin/dma.o bin/v86.o bin/v86asm.o bin/isr.o bin/pit.o bin/init.o bin/kprintf.o bin/regs.o bin/regsasm.o bin/gdt.o bin/idt.o bin/mm.o bin/vga.o bin/vesa.o bin/bugcheck.o bin/string.o bin/keybps2.o bin/irq.o bin/io.o bin/serial.o bin/cmos.o bin/bios.o bin/biosasm.o bin/fdc.o
+linktargets = bin/boot.o bin/bootasm.o bin/syscall.o bin/syscallasm.o bin/paging.o bin/pagingasm.o bin/schedule.o bin/debug.o bin/pic.o bin/dma.o bin/v86.o bin/v86asm.o bin/isr.o bin/pit.o bin/init.o bin/kprintf.o bin/regs.o bin/regsasm.o bin/gdt.o bin/idt.o bin/mm.o bin/vga.o bin/vesa.o bin/bugcheck.o bin/string.o bin/keybps2.o bin/irq.o bin/io.o bin/serial.o bin/cmos.o bin/bios.o bin/biosasm.o bin/fdc.o
 LOGFILE = build.log
 ifeq ($(value arch), i386)
 nasmargs = -f elf32
@@ -55,7 +55,7 @@ MKDIR = mkdir
 SLEEP = sleep
 VER = uname -a
 endif
-all: setcolor buildinit buildboot buildstring builddebug buildpic builddma buildv86 buildpit buildschedule buildregs buildbios buildkprintf buildmm buildirq buildvga buildkeybps2 buildgdt buildisr buildidt buildserial buildbugcheck buildio buildvbe buildcmos buildfdc link remove
+all: setcolor buildinit buildboot buildstring builddebug buildsyscall buildpic builddma buildv86 buildpit buildschedule buildregs buildbios buildkprintf buildmm buildirq buildvga buildkeybps2 buildgdt buildisr buildidt buildserial buildbugcheck buildio buildvbe buildcmos buildfdc link remove
 bin:
 	$(MKDIR) -p bin
 setcolor:
@@ -131,6 +131,11 @@ builddebug: bin
 	@echo Compiling DEBUG for $(value arch)
 	$(CC) $(gccargs) -c src/krnl/debug/debug.c -o bin/debug.o
 	@echo DEBUG object file created 
+buildsyscall: bin
+	@echo Compiling SYSCALL for $(value arch)
+	$(CC) $(gccargs) -c src/krnl/sys/syscall.c -o bin/syscall.o
+	$(ASM) $(nasmargs) src/krnl/sys/syscall.asm -o bin/syscallasm.o
+	@echo SYSCALL object file created 
 buildpic: bin
 	@echo Compiling PIC for $(value arch)
 	$(CC) $(gccargs) -c src/drivers/timers/pic/pic.c -o bin/pic.o
@@ -175,7 +180,7 @@ buildisr: bin
 	@echo ISR object file created 
 buildbugcheck: bin
 	@echo Compiling BUGCHECK for $(value arch)
-	$(CC) $(gccargs) -c src/krnl/check/bugcheck.c -o bin/bugcheck.o
+	$(CC) $(gccargs) -c src/krnl/sys/panic.c -o bin/bugcheck.o
 	@echo BUGCHECK object file created 
 buildcmos: bin
 	@echo Compiling CMOS for $(value arch)
@@ -207,7 +212,7 @@ test:
 	@echo QEMU Shutdown: $(kernelname), bin/figaOS.iso
 testfast:
 	@echo Starting $(kernelname) with QEMU arguments: -cpu 486 -m 4 -accel tcg,thread=multi -fda bin/BlankFloppy.img
-	$(value qemu) -hda bin/figaOS.iso -fda bin/test.img -cpu 486 -m 4 -accel tcg,thread=multi -fdb bin/BlankFloppy.img
+	$(value qemu) -hda bin/figaOS.iso -cpu 486 -m 16 -accel tcg,thread=multi -fdb bin/BlankFloppy.img 
 	@echo QEMU Shutdown: $(kernelname), bin/figaOS.iso
 remove:
 	@echo Cleaning up

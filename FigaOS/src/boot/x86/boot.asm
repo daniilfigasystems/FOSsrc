@@ -3,7 +3,7 @@
 ; Boot procedure
 ; Author: Daniil Dunaef
 ; Date: 14-Nov-2023
-; Bugs; sti bug
+; Bugs: sti bug
 
 
 
@@ -41,26 +41,26 @@ section .multiboot
         dd 25
         dd 8
 fstart:
-section .text 
-global start
-global SystemStack
-extern KernelEntry
+        section .text 
+        global start
+        global SystemStack
+        extern KernelEntry
 start:
-; cmp eax, 0x1badb002
-jmp multibootready
-hlt
+        ; cmp eax, 0x1badb002
+        jmp multibootready
+        hlt
 multibootready:
-mov eax, cr0
-or al, 1
-mov cr0, eax
-; sti
-cli
-push ebx
-push eax
-mov esp, SystemStack
-call KernelEntry
-jmp $
-; hlt
+        mov eax, cr0
+        or al, 1
+        mov cr0, eax
+        ; sti
+        cli
+        push ebx
+        push eax
+        mov esp, SystemStack
+        call KernelEntry
+        jmp $
+        ; hlt
 
 global isr_stub
 
