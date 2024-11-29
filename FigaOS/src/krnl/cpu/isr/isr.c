@@ -40,6 +40,7 @@ extern void isr_28();
 extern void isr_29();
 extern void isr_30();
 extern void isr_31();
+extern void isr_127();
 
 static void *ISRRoutines[32] = { NULL };
 
@@ -118,6 +119,7 @@ void ISRInitialize()
 	IDTSetGate(29, (unsigned)isr_29, 0x08, 0x8E);
 	IDTSetGate(30, (unsigned)isr_30, 0x08, 0x8E);
 	IDTSetGate(31, (unsigned)isr_31, 0x08, 0x8E);
+	IDTSetGate(127, (unsigned)isr_127, 0x08, 0x8E);
 }
 
 void ISRHandler(struct irqr* r)
