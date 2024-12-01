@@ -19,5 +19,5 @@ SCSyscallHandler:
 
 SCDoSyscall:
     popad
-    int 0x80
+    int 0x7f
     ret
